@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Paws & Homes | Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* --- Capsule / Pill Toggle Style --- */
+    .slider-container {
+        display: flex;
+        justify-content: space-between;
+        background: #f0f0f0;
+        border-radius: 50px;
+        padding: 5px;
+        position: relative;
+        margin: 0 auto 25px auto;
+        width: 220px;
+        overflow: hidden;
+    }
+
+    .slider-container button {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 12px 0;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+        transition: color 0.3s ease;
+    }
+
+    .slider-container button.active {
+        color: white;
+    }
+
+    .slider-indicator {
+        position: absolute;
+        top: 5px;
+        bottom: 5px;
+        left: 5px;
+        width: 50%;
+        border-radius: 50px;
+        background: linear-gradient(to right, #4f46e5,#4f46e5);
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    /* Move indicator for NGO */
+    .is-ngo .slider-indicator {
+        transform: translateX(100%);
+    }
+</style>
+
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-gray-50">
+
+    <header class="bg-white shadow-md sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-3 text-2xl font-extrabold text-indigo-600"><i data-lucide="paw-print" class="w-6 h-6"></i> <span>Paws & Homes</span></a>
+                <div class="flex items-center gap-3">
+                    <a href="register.html" class="hidden md:inline-block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full">Register</a>
+                    <button id="menu-toggle" class="md:hidden text-gray-700 p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-nav" class="md:hidden hidden px-4 pb-4 bg-white border-t">
+            <a href="index.html" class="block nav-link py-2">Home</a>
+            <a href="adopt.html" class="block nav-link py-2">Adopt Pets</a>
+            <a href="documentary.html" class="block nav-link py-2">Documentary</a>
+            <a href="ngos.html" class="block nav-link py-2">NGOs</a>
+            <a href="contacts.html" class="block nav-link py-2">Contacts</a>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center py-16">
+        <div id="login-container" class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <div class="text-center mb-6">
+                <i data-lucide="lock" class="w-10 h-10 text-indigo-600 mx-auto mb-2"></i>
+                <h2 class="text-2xl font-bold">Sign In</h2>
+                <p class="text-gray-500">Access your account</p>
+            </div>
+
+            <div id="user-type-switch" class="slider-container">
+    <div class="slider-indicator"></div>
+    <button id="adopter-btn" type="button" class="active" data-type="adopter">Adopter</button>
+    <button id="ngo-btn" type="button" data-type="ngo">NGO</button>
+</div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="text-sm block mb-1">Email</label>
+                    <input name="email" type="email" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500"/>
+                </div>
+                <div>
+                    <label class="text-sm block mb-1">Password</label>
+                    <input name="password" type="password" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500"/>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">Login</button>
+            </form>
+            <div class="text-center mt-4 text-sm text-gray-500">
+                <a href="register.html" class="text-indigo-600 font-semibold hover:text-indigo-700">Create account</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-6 text-center">
+            <p class="text-sm text-gray-400">&copy; 2024 Paws & Homes</p>
+        </div>
+    </footer>
+
+    <div id="app-message"></div>
+    <div id="stray-report-modal" class="hidden"></div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Slider Logic ---
+        const switchContainer = document.getElementById('user-type-switch');
+        const adopterBtn = document.getElementById('adopter-btn');
+        const ngoBtn = document.getElementById('ngo-btn');
+
+        function setActiveType(type) {
+            if (type === 'ngo') {
+                switchContainer.classList.add('is-ngo');
+                ngoBtn.classList.add('active');
+                ngoBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
+                adopterBtn.classList.remove('active');
+                adopterBtn.classList.add('text-gray-600', 'hover:text-gray-900');
+                // You can add logic here to inform Logic.js the login type
+            } else {
+                switchContainer.classList.remove('is-ngo');
+                adopterBtn.classList.add('active');
+                adopterBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
+                ngoBtn.classList.remove('active');
+                ngoBtn.classList.add('text-gray-600', 'hover:text-gray-900');
+                // You can add logic here to inform Logic.js the login type
+            }
+        }
+
+        adopterBtn.addEventListener('click', () => setActiveType('adopter'));
+        ngoBtn.addEventListener('click', () => setActiveType('ngo'));
+
+        // Set initial state for text color
+        setActiveType('adopter');
+
+        // Note: The logic for handling the different login routes (Logic.js)
+        // would need to read the currently active type before submitting.
+    </script>
+    <script src="Logic.js"></script>
+</body>
+</html>

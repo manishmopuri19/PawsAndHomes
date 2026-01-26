@@ -1,0 +1,5 @@
+package com.PawsAndHomes.Backend.Configs;
+
+public class S3service {
+
+}

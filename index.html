@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paws & Homes | Adopt Your New Best Friend</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3 text-2xl font-extrabold text-indigo-600">
+          <i data-lucide="paw-print" class="w-6 h-6"></i>
+          <span>Paws & Homes</span>
+        </a>
+
+        <nav id="main-nav" class="hidden md:flex gap-6 items-center">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="adopt.html" class="nav-link">Adopt Pets</a>
+          <a href="documentary.html" class="nav-link">Documentary</a>
+          <a href="ngos.html" class="nav-link">NGOs</a>
+          <a href="contacts.html" class="nav-link">Contacts</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <!-- Login button -->
+          <a href="login.html" id="login-btn" class="md:inline-block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full font-semibold">Log In</a>
+
+          <!-- Profile dropdown (populated by Logic.js) -->
+          <div id="user-profile" class="hidden relative"></div>
+
+          <!-- Mobile menu toggle -->
+          <button id="menu-toggle" class="md:hidden text-gray-700 p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- mobile nav -->
+    <div id="mobile-nav" class="md:hidden hidden px-4 pb-4 bg-white border-t">
+      <a href="index.html" class="block nav-link py-2">Home</a>
+      <a href="adopt.html" class="block nav-link py-2">Adopt Pets</a>
+      <a href="documentary.html" class="block nav-link py-2">Documentary</a>
+      <a href="ngos.html" class="block nav-link py-2">NGOs</a>
+      <a href="contacts.html" class="block nav-link py-2">Contacts</a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow">
+    <section class="bg-indigo-50 pt-16 pb-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">Find Your Forever Friend Today</h1>
+        <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Give a rescue pet a second chance. Browse adoptable animals and connect with local NGOs and foster networks.</p>
+
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="adopt.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-semibold shadow">Start Adoption Search</a>
+          <button id="report-btn" class="border border-red-600 text-red-600 px-6 py-3 rounded-full font-semibold">Report a Stray</button>
+        </div>
+
+        <div class="mt-12">
+          <img class="hero-img" src="images/heropage.webp" alt="Happy adopted pets">
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="section-header">
+          <h2 class="text-3xl font-bold text-gray-900">Meet Our Featured Friends</h2>
+        </div>
+
+        <div id="featured-pets" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <!-- populated dynamically -->
+        </div>
+
+        <div class="mt-12 text-center">
+          <a href="adopt.html" class="bg-indigo-100 text-indigo-700 px-5 py-3 rounded-full font-semibold">View All Adoptable Pets</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white mt-auto">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-center">
+      <p class="text-sm text-gray-400">&copy; 2024 Paws & Homes. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- shared containers -->
+  <div id="app-message" class="fixed right-4 bottom-6 z-50"></div>
+  <div id="stray-report-modal" class="hidden"></div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="Logic.js"></script>
+  <script>
+    // small wiring for "Report a Stray" CTA
+    document.getElementById('report-btn').addEventListener('click', ()=> {
+      window.openStrayReportModal();
+    });
+  </script>
+</body>
+</html>

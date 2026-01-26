@@ -1,0 +1,5 @@
+package com.PawsAndHomes.Backend.Dto.requsetDto;
+
+public class petResponseDto {
+
+}

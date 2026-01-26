@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"/>
+ <meta name="viewport" content="width=device-width,initial-scale=1"/>
+ <title>Paws & Homes | Our Partners</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css"/>
+ <script src="https://unpkg.com/lucide@latest"></script>
+ <style>
+  /* Custom styles for the nav link in this page */
+  .nav-link { 
+   color: #4b5563; /* Gray-600 */
+   font-weight: 500;
+   transition: color 0.2s, border-bottom 0.2s;
+  }
+  a[href="ngos.html"] { 
+   color: #4f46e5; /* Indigo-600 for active link */
+   border-bottom: 2px solid #4f46e5; 
+  }
+    /* Modal styles */
+    .modal-bg { background-color: rgba(0,0,0,0.5); }
+    .modal { animation: zoomIn 0.25s ease-in-out; }
+    @keyframes zoomIn { from {transform:scale(0.9); opacity:0;} to {transform:scale(1); opacity:1;} }
+ </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+ <header class="bg-white shadow-md sticky top-0 z-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   <div class="flex items-center justify-between h-16">
+    <a href="index.html" class="flex items-center gap-3 text-2xl font-extrabold text-indigo-600">
+     <i data-lucide="paw-print" class="w-6 h-6"></i>
+     <span>Paws & Homes</span>
+    </a>
+
+    <nav id="main-nav" class="hidden md:flex gap-6 items-center">
+     <a href="index.html" class="nav-link">Home</a>
+     <a href="adopt.html" class="nav-link">Adopt Pets</a>
+     <a href="documentary.html" class="nav-link">Documentary</a>
+     <a href="ngos.html" class="nav-link">NGOs</a>
+     <a href="contacts.html" class="nav-link">Contacts</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+          <a href="login.html" id="login-btn" class="md:inline-block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full font-semibold">Log In</a>
+
+          <div id="user-profile" class="hidden relative"></div>
+
+          <button id="menu-toggle" class="md:hidden text-gray-700 p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+    </div>
+   </div>
+  </div>
+
+    <div id="mobile-nav" class="md:hidden hidden px-4 pb-4 bg-white border-t">
+   <a href="index.html" class="block nav-link py-2">Home</a>
+   <a href="adopt.html" class="block nav-link py-2">Adopt Pets</a>
+   <a href="documentary.html" class="block nav-link py-2">Documentary</a>
+   <a href="ngos.html" class="block nav-link py-2">NGOs</a>
+   <a href="contacts.html" class="block nav-link py-2">Contacts</a>
+  </div>
+ </header>
+
+
+ <main class="flex-grow py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Meet Our Trusted Partner Organizations</h1>
+   <div id="ngos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+       </div>
+  </div>
+ </main>
+
+ <footer class="bg-gray-800 text-white mt-auto">
+  <div class="max-w-7xl mx-auto px-4 py-6 text-center">
+   <p class="text-sm text-gray-400">&copy; 2024 Paws & Homes. All rights reserved.</p>
+   <p class="text-xs text-gray-500 mt-1">Disclaimer: All data is simulated for demonstration.</p>
+  </div>
+ </footer>
+
+  <div id="surrender-modal" class="hidden fixed inset-0 modal-bg flex justify-center items-center z-50">
+    <div class="modal bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg">
+      <h3 class="text-2xl font-bold mb-4 text-indigo-600 flex items-center gap-2">
+        <i data-lucide="shield-plus" class="w-6 h-6"></i> Surrender a Pet to an NGO
+      </h3>
+      <p class="text-sm text-gray-500 mb-4">You are submitting a request to **<span id="ngo-name-title" class="font-semibold text-indigo-700"></span>**.</p>
+      
+      <form id="pet-surrender-form" class="flex flex-col gap-4">
+        <input type="hidden" id="target-ngo-name" name="targetNgo">
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">Pet's Name</label><input type="text" name="petName" placeholder="Max, Whiskers, etc." class="p-3 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500" required></div>
+        <div class="grid grid-cols-3 gap-3">
+          <div><label class="block text-sm font-medium text-gray-700 mb-1">Age (Years)</label><input type="number" name="petAge" placeholder="2" min="0" class="p-3 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500" required></div>
+          <div class="col-span-2"><label class="block text-sm font-medium text-gray-700 mb-1">Gender</label><select name="petGender" class="p-3 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500" required><option value="">Select Gender</option><option value="Male">Male ♂️</option><option value="Female">Female ♀️</option><option value="Unknown">Unknown</option></select></div>
+        </div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">Pet Photo</label><input type="file" name="petPicture" accept="image/*" class="p-3 border rounded-lg w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" required></div>
+        <div><label class="block text-sm font-medium text-gray-700 mb-1">Description / Reason for Surrender</label><textarea name="petDescription" placeholder="Tell us about the pet and why you need to surrender them (e.g., temperament, medical needs, reason for rehoming)." rows="4" class="p-3 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500" required></textarea></div>
+        <div class="flex justify-end gap-3 mt-3">
+          <button type="button" id="close-surrender-modal" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold">Submit Surrender Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div id="ngo-profile-modal" class="hidden fixed inset-0 modal-bg flex justify-center items-center z-50">
+    <div class="modal bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg">
+      <div class="flex justify-between items-start border-b pb-3 mb-4">
+        <h3 class="text-3xl font-bold text-indigo-600" id="modal-ngo-name">NGO Name</h3>
+        <button id="close-profile-modal" class="text-gray-400 hover:text-gray-700 p-1"><i data-lucide="x" class="w-6 h-6"></i></button>
+      </div>
+      
+      <p class="text-gray-600 mb-4" id="modal-ngo-description">Organization mission and details will appear here.</p>
+      
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <div>
+          <h4 class="font-semibold text-lg text-gray-700 mb-2 border-b pb-1">Contact & Focus</h4>
+          <p class="text-sm text-gray-500 mb-1"><i data-lucide="map-pin" class="w-4 h-4 inline mr-1"></i> Location: <span id="modal-ngo-location"></span></p>
+          <p class="text-sm text-gray-500 mb-1"><i data-lucide="shield-check" class="w-4 h-4 inline mr-1"></i> Focus: <span id="modal-ngo-focus"></span></p>
+          <p class="text-sm text-gray-500 mb-1"><i data-lucide="mail" class="w-4 h-4 inline mr-1"></i> Email: <span id="modal-ngo-email"></span></p>
+          <a href="#" id="modal-ngo-site" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium mt-2 flex items-center gap-1"><i data-lucide="external-link" class="w-4 h-4"></i> Visit NGO Website</a>
+        </div>
+
+        <div class="p-3 bg-indigo-50 rounded-lg text-center">
+          <h4 class="font-semibold text-lg text-indigo-700 mb-2 flex items-center justify-center gap-2">
+            <i data-lucide="scan" class="w-5 h-5"></i> Donate Today
+          </h4>
+          <img id="modal-ngo-qr" src="" alt="Donation QR Code" class="w-32 h-32 mx-auto object-contain p-1 border border-indigo-300 bg-white" />
+          <p class="text-xs text-gray-500 mt-2">Scan to support their mission.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-3">
+        <button type="button" id="open-surrender-from-profile" class="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-semibold">
+          <i data-lucide="shield-plus" class="inline w-4 h-4 mr-1"></i> Surrender a Pet
+        </button>
+        <button type="button" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium" onclick="document.getElementById('ngo-profile-modal').classList.add('hidden');">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+ <script src="https://unpkg.com/lucide@latest"></script>
+ <script>
+    // --- CONFIGURATION & LOCAL STORAGE SETUP ---
+    const SURRENDER_REQUESTS_KEY = 'surrenderRequests';
+    const NGO_SETTINGS_KEY = 'ngoSettings'; 
+    const QR_CODE_KEY = 'ngoQrCode';
+
+    // Utility to get/set data from localStorage
+    const getStorage = (key, defaultValue = []) => {
+        try {
+            return JSON.parse(localStorage.getItem(key)) || defaultValue;
+        } catch (e) {
+            console.error("Error reading localStorage key:", key, e);
+            return defaultValue;
+        }
+    };
+    const setStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+    
+    // Default NGO settings (mimicking the settings saved by the NGO Dashboard)
+    const getDefaultNGOSettings = () => ({
+        name: 'Paws & Homes Rescue', 
+        email: 'contact@pawshomes.org', 
+        bio: 'We are a non-profit dedicated to finding loving homes for rescued animals in the tri-state area.',
+        website: 'https://www.pawshomes.org', // Default site link
+        qrCode: null
+    });
+
+
+    // --- NGO PARTNER DATA (for listing) ---
+    const NGO_PARTNERS = [
+    { id: 101, name: "Happy Paws Foundation", logo: "https://picsum.photos/60/60?random=101", location: "San Francisco, CA", focus: "Dog and Cat Rescue", pets_saved: 450, description: "Dedicated to finding forever homes for abandoned dogs and cats through community outreach and high-volume fostering." },
+    { id: 102, name: "Urban Animal Welfare", logo: "https://picsum.photos/60/60?random=102", location: "New York, NY", focus: "TNR and Wildlife Rehabilitation", pets_saved: 920, description: "Focusing on Trap-Neuter-Return (TNR) programs for feral cat colonies and rescuing injured urban wildlife." },
+    { id: 103, name: "Coastal Critter Haven", logo: "https://picsum.photos/60/60?random=103", location: "Miami, FL", focus: "Exotic and Senior Pet Care", pets_saved: 180, description: "A safe place for senior animals and exotic pets that require specialized care before adoption." }
+    ];
+
+    // --- DOM ELEMENTS & MODAL LOGIC ---
+    const surrenderModal = document.getElementById('surrender-modal');
+    const closeSurrenderModal = document.getElementById('close-surrender-modal');
+    const surrenderForm = document.getElementById('pet-surrender-form');
+    const ngoNameTitle = document.getElementById('ngo-name-title');
+    const targetNgoInput = document.getElementById('target-ngo-name');
+
+    const profileModal = document.getElementById('ngo-profile-modal');
+    const profileNgoName = document.getElementById('modal-ngo-name');
+    const profileNgoDesc = document.getElementById('modal-ngo-description');
+    const profileNgoLoc = document.getElementById('modal-ngo-location');
+    const profileNgoFocus = document.getElementById('modal-ngo-focus');
+    const profileNgoEmail = document.getElementById('modal-ngo-email');
+    const profileNgoQR = document.getElementById('modal-ngo-qr');
+    const profileNgoSite = document.getElementById('modal-ngo-site');
+    const closeProfileModal = document.getElementById('close-profile-modal');
+    const openSurrenderFromProfile = document.getElementById('open-surrender-from-profile');
+    
+    let currentNgoName = ''; // To hold the name for state management
+
+    // Function to open the Surrender Form
+    window.openSurrenderForm = (ngoName) => {
+        ngoNameTitle.textContent = ngoName;
+        targetNgoInput.value = ngoName;
+        surrenderModal.classList.remove('hidden');
+        lucide.createIcons();
+    };
+
+    closeSurrenderModal.onclick = () => {
+        surrenderModal.classList.add('hidden');
+        surrenderForm.reset();
+    };
+
+    closeProfileModal.onclick = () => profileModal.classList.add('hidden');
+
+    // Button to switch from Profile Modal to Surrender Modal
+    openSurrenderFromProfile.onclick = () => {
+        profileModal.classList.add('hidden');
+        openSurrenderForm(currentNgoName);
+    }
+
+    // NEW: Function to open the NGO Profile Modal with details
+    window.viewNGOProfile = (id) => {
+        const ngo = NGO_PARTNERS.find(n => n.id === id);
+        if (!ngo) {
+            alert("NGO not found.");
+            return;
+        }
+
+        // Use the default settings, but check if local storage has overwritten them
+        const settings = getStorage(NGO_SETTINGS_KEY, getDefaultNGOSettings());
+        const qrDataUrl = localStorage.getItem(QR_CODE_KEY);
+
+        // Update modal content
+        currentNgoName = ngo.name; // Set current state
+        profileNgoName.textContent = ngo.name;
+        profileNgoDesc.textContent = ngo.description;
+        profileNgoLoc.textContent = ngo.location;
+        profileNgoFocus.textContent = ngo.focus;
+
+        // Note: We are simulating that the first NGO ('Happy Paws Foundation') uses the shared settings
+        // In a real app, each NGO would have its own settings object
+        if (ngo.id === 101) {
+            profileNgoEmail.textContent = settings.email;
+            profileNgoQR.src = qrDataUrl || 'https://via.placeholder.com/128/f5f5f4/9ca3af?text=NO+QR'; 
+            profileNgoSite.href = settings.website || '#';
+            profileNgoSite.textContent = 'Visit ' + (settings.website ? new URL(settings.website).hostname : 'NGO Website');
+        } else {
+            // For other NGOs, use placeholder data or their default info
+            profileNgoEmail.textContent = `contact@${ngo.name.toLowerCase().replace(/\s/g, '')}.org`;
+            profileNgoQR.src = 'https://via.placeholder.com/128/f5f5f4/9ca3af?text=NO+QR'; 
+            profileNgoSite.href = '#';
+            profileNgoSite.textContent = 'Visit NGO Website (Placeholder)';
+        }
+
+        profileModal.classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+
+    // Handle Surrender Form Submission (Saves to Dashboard's Local Storage)
+    surrenderForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(surrenderForm);
+        const file = formData.get('petPicture');
+        let pictureUrl = ''; 
+        
+        if (file && file instanceof File) {
+          pictureUrl = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+          });
+        }
+
+        const newRequest = {
+            id: Date.now(),
+            targetNgo: formData.get('targetNgo'),
+            name: formData.get('petName'),
+            age: formData.get('petAge'),
+            gender: formData.get('petGender'),
+            description: formData.get('petDescription'),
+            picture: pictureUrl, // Stored as DataURL
+            submittedAt: new Date().toISOString()
+        };
+        
+        let existingRequests = getStorage(SURRENDER_REQUESTS_KEY);
+        existingRequests.push(newRequest);
+        setStorage(SURRENDER_REQUESTS_KEY, existingRequests); 
+        
+        alert(`Success! Your request to surrender ${newRequest.name} to ${newRequest.targetNgo} has been submitted.`);
+        
+        surrenderModal.classList.add('hidden');
+        surrenderForm.reset();
+    });
+
+
+    // Function to render NGO profile cards
+    function renderNGOProfiles() {
+    const grid = document.getElementById('ngos-grid');
+    grid.innerHTML = ""; 
+
+    NGO_PARTNERS.forEach(ngo => {
+        const cardEl = document.createElement('div');
+        cardEl.className = "bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col";
+
+        cardEl.innerHTML = `
+            <div class="flex items-center gap-4 mb-4 border-b pb-4">
+            <img src="${ngo.logo}" alt="${ngo.name} Logo" class="w-16 h-16 rounded-full border-2 border-indigo-200 object-cover">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">${ngo.name}</h2>
+                <p class="text-sm text-gray-500 flex items-center gap-1">
+                <i data-lucide="map-pin" class="w-4 h-4"></i> ${ngo.location}
+                </p>
+            </div>
+            </div>
+            
+            <p class="text-gray-600 mb-4 flex-grow line-clamp-3">${ngo.description}</p>
+            
+            <div class="text-sm text-gray-700 mb-4">
+                <p class="font-semibold">Focus: <span class="font-normal text-indigo-600">${ngo.focus}</span></p>
+                <p class="font-semibold">Pets Saved: <span class="font-normal">${ngo.pets_saved}+</span></p>
+            </div>
+            
+            <div class="mt-auto pt-4 border-t flex flex-col sm:flex-row gap-3">
+                <button onclick="viewNGOProfile(${ngo.id})" class="flex-1 text-center py-2 px-4 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition font-semibold text-sm">
+                    <i data-lucide="external-link" class="inline w-4 h-4 mr-1"></i> View Profile & Donate
+                </button>
+
+                <button onclick="openSurrenderForm('${ngo.name}')" class="flex-1 text-center py-2 px-4 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition font-semibold text-sm">
+                    <i data-lucide="shield-plus" class="inline w-4 h-4 mr-1"></i> Surrender a Pet
+                </button>
+            </div>
+        `;
+        grid.appendChild(cardEl);
+    });
+    
+    lucide.createIcons(); 
+    }
+
+
+    // Initial render
+    document.addEventListener('DOMContentLoaded', () => {
+        renderNGOProfiles();
+        lucide.createIcons();
+    });
+
+ </script>
+ <script src="Logic.js"></script>
+</body>
+</html>

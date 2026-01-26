@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Profile | Paws & Homes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .main-color { color: #2563eb; } /* Blue 600 */
+        body { background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+        
+        <div class="p-6 main-bg text-white">
+            <h1 id="public-ngo-name" class="text-4xl font-extrabold flex items-center gap-3">
+                <i data-lucide="paw-print" class="w-8 h-8"></i> Loading NGO Name...
+            </h1>
+            <p id="public-ngo-location" class="text-lg mt-2 flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-5 h-5"></i> Loading Location...
+            </p>
+        </div>
+
+        <div class="p-6 grid md:grid-cols-3 gap-8">
+            
+            <div class="md:col-span-2">
+                <h2 class="text-2xl font-bold main-color mb-3 border-b pb-2">Our Mission</h2>
+                <p id="public-ngo-bio" class="text-gray-700 mb-8 italic">
+                    Loading mission statement...
+                </p>
+
+                <h2 class="text-2xl font-bold main-color mb-4 border-b pb-2">Pets Available for Adoption (Static Placeholder)</h2>
+                <div class="space-y-4">
+                    <div class="p-4 border rounded-lg shadow-sm">
+                        <p class="font-semibold text-gray-800">Max (Lab Mix) - Available</p>
+                        <p class="text-sm text-gray-500">A friendly, energetic dog looking for a yard and a loving family.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-1 bg-gray-50 p-4 rounded-lg border">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="info" class="w-5 h-5"></i> Contact & Info
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <p class="flex items-center gap-2 text-gray-700">
+                        <i data-lucide="mail" class="w-4 h-4 text-blue-500"></i> 
+                        Email: <a id="public-ngo-email" href="#" class="text-blue-600 hover:underline">loading...</a>
+                    </p>
+                    <p class="flex items-center gap-2 text-gray-700">
+                        <i data-lucide="link" class="w-4 h-4 text-blue-500"></i> 
+                        Website: <a id="public-ngo-website" href="#" target="_blank" class="text-blue-600 hover:underline">loading...</a>
+                    </p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i data-lucide="heart" class="w-5 h-5 text-red-500"></i> Donate
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-3">Support our rescue efforts by scanning our QR code.</p>
+                    <img id="public-qr-code" src="https://via.placeholder.com/150?text=No+QR+Code" 
+                         class="w-32 h-32 object-contain mx-auto border p-1 rounded hidden" alt="Donation QR Code">
+                    <p id="qr-code-message" class="text-center text-xs text-gray-400 mt-2">No QR code uploaded yet.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            const NGO_SETTINGS_KEY = 'ngoSettings';
+            const QR_CODE_KEY = 'ngoQrCode';
+
+            const getStorage = (key, defaultValue = {}) => {
+                try {
+                    return JSON.parse(localStorage.getItem(key)) || defaultValue;
+                } catch (e) {
+                    return defaultValue;
+                }
+            };
+
+            function loadPublicProfile() {
+                const defaultSettings = {
+                    name: 'Paws & Homes Rescue',
+                    email: 'contact@pawshomes.org',
+                    bio: 'No mission statement provided yet.',
+                    website: 'https://pawsandhomes.org',
+                    location: 'Anywhere, USA'
+                };
+                const settings = getStorage(NGO_SETTINGS_KEY, defaultSettings);
+                const qrDataUrl = localStorage.getItem(QR_CODE_KEY);
+
+                // 1. NGO Name and Location (Header)
+                document.getElementById('public-ngo-name').innerHTML = 
+                    `<i data-lucide="paw-print" class="w-8 h-8"></i> ${settings.name}`;
+                document.getElementById('public-ngo-location').innerHTML = 
+                    `<i data-lucide="map-pin" class="w-5 h-5"></i> ${settings.location}`;
+
+                // 2. Bio
+                document.getElementById('public-ngo-bio').textContent = settings.bio;
+                
+                // 3. Contact Info
+                const emailLink = document.getElementById('public-ngo-email');
+                emailLink.textContent = settings.email;
+                emailLink.href = `mailto:${settings.email}`;
+
+                const websiteLink = document.getElementById('public-ngo-website');
+                websiteLink.textContent = settings.website.replace(/https?:\/\//, ''); // Clean up URL for display
+                websiteLink.href = settings.website;
+
+                // 4. QR Code
+                const qrImg = document.getElementById('public-qr-code');
+                const qrMessage = document.getElementById('qr-code-message');
+
+                if (qrDataUrl) {
+                    qrImg.src = qrDataUrl;
+                    qrImg.classList.remove('hidden');
+                    qrMessage.textContent = 'Scan to donate!';
+                } else {
+                    qrImg.classList.add('hidden');
+                    qrImg.src = "https://via.placeholder.com/150?text=No+QR+Code"; // Fallback placeholder
+                    qrMessage.textContent = 'No QR code uploaded yet.';
+                }
+                
+                lucide.createIcons();
+            }
+
+            loadPublicProfile();
+        });
+    </script>
+</body>
+</html>

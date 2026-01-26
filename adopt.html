@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Paws & Homes | Adopt</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+   <header class="bg-white shadow-md sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-3 text-2xl font-extrabold text-indigo-600">
+          <i data-lucide="paw-print" class="w-6 h-6"></i>
+          <span>Paws & Homes</span>
+        </a>
+
+        <nav id="main-nav" class="hidden md:flex gap-6 items-center">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="adopt.html" class="nav-link">Adopt Pets</a>
+          <a href="documentary.html" class="nav-link">Documentary</a>
+          <a href="ngos.html" class="nav-link">NGOs</a>
+          <a href="contacts.html" class="nav-link">Contacts</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <!-- Login button -->
+          <a href="login.html" id="login-btn" class="md:inline-block bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-full font-semibold">Log In</a>
+
+          <!-- Profile dropdown (populated by Logic.js) -->
+          <div id="user-profile" class="hidden relative"></div>
+
+          <!-- Mobile menu toggle -->
+          <button id="menu-toggle" class="md:hidden text-gray-700 p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- mobile nav -->
+    <div id="mobile-nav" class="md:hidden hidden px-4 pb-4 bg-white border-t">
+      <a href="index.html" class="block nav-link py-2">Home</a>
+      <a href="adopt.html" class="block nav-link py-2">Adopt Pets</a>
+      <a href="documentary.html" class="block nav-link py-2">Documentary</a>
+      <a href="ngos.html" class="block nav-link py-2">NGOs</a>
+      <a href="contacts.html" class="block nav-link py-2">Contacts</a>
+    </div>
+  </header>
+
+
+  <main class="flex-grow py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">Find Your New Best Friend</h1>
+
+      <!-- <div class="bg-white rounded-2xl p-6 mb-8 shadow">
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div id="quick-filters" class="flex flex-wrap gap-3"></div>
+          <div class="text-sm text-gray-500">Showing adoptable animals. Click Adopt to simulate adoption.</div>
+        </div>
+      </div> -->
+
+      <div id="pet-card-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+      <div id="no-pets-message" class="hidden text-center py-12 bg-white rounded-2xl mt-8 border-2 border-dashed border-gray-200">
+        <div class="text-gray-500">No pets to show.</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white mt-auto">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-center">
+      <p class="text-sm text-gray-400">&copy; 2024 Paws & Homes. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div id="app-message"></div>
+  <div id="stray-report-modal" class="hidden"></div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="Logic.js"></script>
+</body>
+</html>

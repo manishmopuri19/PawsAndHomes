@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paws & Homes | Register</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="bg-white shadow-md sticky top-0 z-20 p-4 flex justify-between items-center">
+  <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-xl">
+    <i data-lucide="paw-print" class="w-6 h-6"></i> Paws & Homes
+  </a>
+  <a href="login.html" class="text-indigo-600 font-semibold">Log In</a>
+</header>
+
+<main class="flex-grow flex items-center justify-center p-6">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+
+    <div class="flex justify-center gap-4 mb-6">
+      <button id="common-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold">Adopter</button>
+      <button id="ngo-btn" class="px-4 py-2 border rounded-xl font-semibold">NGO</button>
+    </div>
+
+    <!-- COMMON USER FORM -->
+    <form id="reg-form-common" class="">
+      <input type="text" name="name" placeholder="Full Name" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="email" name="email" placeholder="Email" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="text" name="mobile" placeholder="Mobile Number" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="password" name="password" placeholder="Password" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="password" name="confirm" placeholder="Confirm Password" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold">Register</button>
+    </form>
+
+    <!-- NGO FORM -->
+    <form id="reg-form-ngo" class="hidden">
+      <input type="text" name="orgname" placeholder="Organization Name" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="email" name="email" placeholder="Email" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="text" name="mobile" placeholder="Mobile Number" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="text" name="location" placeholder="Location" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="text" name="license" placeholder="License / Registration No." required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="password" name="password" placeholder="Password" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <input type="password" name="confirm" placeholder="Confirm Password" required class="input-field mb-3 w-full p-3 border rounded-lg">
+      <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold">Register NGO</button>
+    </form>
+
+  </div>
+</main>
+
+<div id="app-message"></div>
+
+<script src="Logic.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const commonBtn = document.getElementById('common-btn');
+  const ngoBtn = document.getElementById('ngo-btn');
+  const commonForm = document.getElementById('reg-form-common');
+  const ngoForm = document.getElementById('reg-form-ngo');
+
+  // toggle forms
+  commonBtn.onclick = () => { commonForm.classList.remove('hidden'); ngoForm.classList.add('hidden'); commonBtn.classList.add('bg-indigo-600','text-white'); ngoBtn.classList.remove('bg-indigo-600','text-white'); };
+  ngoBtn.onclick = () => { ngoForm.classList.remove('hidden'); commonForm.classList.add('hidden'); ngoBtn.classList.add('bg-indigo-600','text-white'); commonBtn.classList.remove('bg-indigo-600','text-white'); };
+
+  // form submissions (mock)
+  commonForm.onsubmit = (e)=>{
+    e.preventDefault();
+    const f = e.target;
+    const name = f.name.value.trim();
+    const email = f.email.value.trim();
+    const pwd = f.password.value.trim();
+    const conf = f.confirm.value.trim();
+    if(pwd!==conf){ window.showApplicationMessage('Passwords do not match',{tone:'error'}); return; }
+    window.showApplicationMessage(`Common user <strong>${name}</strong> registered successfully!`,{tone:'success'});
+    f.reset();
+  };
+
+  ngoForm.onsubmit = (e)=>{
+    e.preventDefault();
+    const f = e.target;
+    const org = f.orgname.value.trim();
+    const loc = f.location.value.trim();
+    const lic = f.license.value.trim();
+    const pwd = f.password.value.trim();
+    const conf = f.confirm.value.trim();
+    if(!loc || !lic){ window.showApplicationMessage('Location and License are mandatory!',{tone:'error'}); return; }
+    if(pwd!==conf){ window.showApplicationMessage('Passwords do not match',{tone:'error'}); return; }
+    window.showApplicationMessage(`NGO <strong>${org}</strong> registered successfully!`,{tone:'success'});
+    f.reset();
+  };
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paws & Homes | Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+    /* Admin Theming: Purple/Indigo for Authority */
+    body { background-color: #f8fafc; color: #1e293b; }
+    .admin-color { color: #6366f1; } /* Indigo 500 */
+    .admin-bg { background-color: #6366f1; }
+    .admin-hover-bg { background-color: #4f46e5; }
+    .active-nav { background-color: #eef2ff; color: #4338ca; font-weight: 600; }
+    
+    /* Shared Styles */
+    .fade-in { animation: fadeIn 0.4s ease-in-out forwards; opacity: 0; }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(8px);} to {opacity:1; transform:translateY(0);} }
+    .modal-bg { background-color: rgba(0,0,0,0.5); }
+    .modal { animation: zoomIn 0.25s ease-in-out; }
+    @keyframes zoomIn { from {transform:scale(0.9); opacity:0;} to {transform:scale(1); opacity:1;} }
+    .btn { transition: background-color 0.2s, opacity 0.2s; }
+    .btn:hover { opacity:0.9; }
+</style>
+</head>
+<body class="min-h-screen flex">
+
+<aside class="w-64 bg-white shadow-xl flex flex-col p-4 space-y-6">
+    <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition duration-200">
+        <span class="text-2xl">👑</span>
+        <h1 class="text-xl font-bold admin-color">Paws & Homes Admin</h1>
+    </a>
+    
+    <div class="p-3 bg-indigo-50 rounded-lg text-sm border-l-4 border-indigo-300">
+        <p class="font-semibold text-gray-700 flex items-center gap-1 mb-1">
+            <i data-lucide="shield" class="w-4 h-4 admin-color"></i> Super User
+        </p>
+        <p id="admin-user-info" class="text-xs text-gray-500 italic">
+            Logged in as: admin@admin.com (For Demo)
+        </p>
+    </div>
+    
+    <nav class="flex flex-col gap-2 text-gray-700">
+        <button class="nav-btn active-nav text-left px-3 py-2 rounded hover:bg-indigo-100" data-target="dashboard">
+            <i data-lucide="layout-dashboard" class="inline mr-2 w-5 h-5"></i> Platform Overview
+        </button>
+        <button class="nav-btn text-left px-3 py-2 rounded hover:bg-indigo-100" data-target="users">
+            <i data-lucide="users" class="inline mr-2 w-5 h-5"></i> User Management
+        </button>
+        <button class="nav-btn text-left px-3 py-2 rounded hover:bg-indigo-100" data-target="content">
+            <i data-lucide="paw-print" class="inline mr-2 w-5 h-5"></i> Content Management
+        </button>
+        <button class="nav-btn text-left px-3 py-2 rounded hover:bg-indigo-100" data-target="moderation">
+            <i data-lucide="flag" class="inline mr-2 w-5 h-5"></i> Moderation Center
+        </button>
+        <button class="nav-btn text-left px-3 py-2 rounded hover:bg-indigo-100" data-target="system">
+            <i data-lucide="settings" class="inline mr-2 w-5 h-5"></i> System Settings
+        </button>
+    </nav>
+    <button id="admin-logout-btn" class="mt-auto admin-bg text-white py-2 rounded hover:admin-hover-bg transition">Logout</button>
+</aside>
+
+<main class="flex-1 p-8 overflow-y-auto relative">
+    <section id="dashboard" class="fade-in">
+        <h2 class="text-3xl font-bold admin-color mb-6 flex items-center gap-3">
+            <i data-lucide="layout-dashboard" class="w-7 h-7"></i> Platform Overview
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-indigo-500">
+                <p class="text-gray-500 text-sm">Total Users</p>
+                <p id="stat-total-users" class="text-3xl font-semibold text-gray-900">0</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-teal-500">
+                <p class="text-gray-500 text-sm">Active NGOs</p>
+                <p id="stat-active-ngos" class="text-3xl font-semibold text-gray-900">0</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-red-500">
+                <p class="text-gray-500 text-sm">Pending Reports</p>
+                <p id="stat-pending-reports" class="text-3xl font-semibold text-gray-900">0</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm">Total Pet Listings</p>
+                <p id="stat-total-pets" class="text-3xl font-semibold text-gray-900">0</p>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Urgent Actions</h3>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="document.querySelector('.nav-btn[data-target=\'moderation\']').click()" class="bg-red-500 text-white px-4 py-2 rounded-lg btn flex items-center gap-2 hover:bg-red-600">
+                    <i data-lucide="flag"></i> Review Reports
+                </button>
+                <button onclick="document.querySelector('.nav-btn[data-target=\'users\']').click()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg btn flex items-center gap-2 hover:bg-yellow-600">
+                    <i data-lucide="user-x"></i> Manage Suspensions
+                </button>
+                <button onclick="document.querySelector('.nav-btn[data-target=\'system\']').click()" class="bg-gray-500 text-white px-4 py-2 rounded-lg btn flex items-center gap-2 hover:bg-gray-600">
+                    <i data-lucide="server-cog"></i> Platform Health
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <section id="users" class="hidden fade-in">
+        <h2 class="text-3xl font-bold admin-color mb-6 flex items-center gap-3">
+            <i data-lucide="users" class="w-7 h-7"></i> User Management
+        </h2>
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div id="user-tabs" class="flex border-b mb-4">
+                <button class="user-tab-btn px-4 py-2 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600" data-usertype="all">All Users</button>
+                <button class="user-tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-indigo-600" data-usertype="ngo">NGO Accounts</button>
+                <button class="user-tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-indigo-600" data-usertype="common">Adopters</button>
+            </div>
+            <div id="user-list-container" class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email/Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+                <p id="no-users-msg" class="text-gray-500 text-center p-4 hidden">No users found for this filter.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="content" class="hidden fade-in">
+        <h2 class="text-3xl font-bold admin-color mb-6 flex items-center gap-3">
+            <i data-lucide="paw-print" class="w-7 h-7"></i> Content Management
+        </h2>
+        <p class="text-gray-500 mb-4">View and moderate all pet listings across the platform.</p>
+        <div id="all-pet-posts-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        <p id="no-content-msg" class="text-gray-500 text-center p-4 hidden">No pet posts found.</p>
+    </section>
+
+    <section id="moderation" class="hidden fade-in">
+        <h2 class="text-3xl font-bold admin-color mb-6 flex items-center gap-3">
+            <i data-lucide="flag" class="w-7 h-7"></i> Moderation Center
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-lg h-full">
+                <h3 class="text-xl font-semibold text-yellow-600 mb-4 flex items-center gap-2 border-b pb-2">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i> Stray Animal Reports
+                </h3>
+                <div id="admin-stray-reports-list" class="flex flex-col gap-4 max-h-[500px] overflow-y-auto">
+                    </div>
+                <p id="admin-no-stray-reports-msg" class="text-gray-500 mt-4 text-center p-4 border-2 border-dashed rounded-lg hidden">No unreviewed stray reports. 🐾</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg h-full">
+                <h3 class="text-xl font-semibold text-blue-600 mb-4 flex items-center gap-2 border-b pb-2">
+                    <i data-lucide="mail-check" class="w-5 h-5"></i> Applications Audit Log
+                </h3>
+                <p class="text-sm text-gray-500 mb-3">Viewing latest 5 adoption/surrender requests.</p>
+                <div id="admin-audit-list" class="flex flex-col gap-3 max-h-[500px] overflow-y-auto">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="system" class="hidden fade-in">
+        <h2 class="text-3xl font-bold admin-color mb-6 flex items-center gap-3">
+            <i data-lucide="settings" class="w-7 h-7"></i> System Settings
+        </h2>
+        <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col gap-6 max-w-2xl">
+            <h3 class="font-semibold text-gray-700 border-b pb-2 flex items-center gap-2"><i data-lucide="server-cog" class="w-5 h-5"></i> Platform Configuration</h3>
+            
+            <div class="flex justify-between items-center p-3 border rounded-lg bg-gray-50">
+                <label for="maintenance-mode" class="text-sm font-medium text-gray-700">Maintenance Mode</label>
+                <input type="checkbox" id="maintenance-mode" class="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Manage Pet Breeds (e.g., Dog: Poodle, Beagle)</label>
+                <textarea id="manage-breeds" rows="3" placeholder="Enter breeds separated by commas..." class="p-3 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                <button id="save-config-btn" class="admin-bg text-white py-2 px-4 rounded-lg hover:admin-hover-bg transition font-semibold mt-2">Save Configuration</button>
+            </div>
+            
+            <h3 class="font-semibold text-gray-700 border-b pb-2 mt-4 flex items-center gap-2"><i data-lucide="database" class="w-5 h-5"></i> Dangerous Actions</h3>
+            
+            <div class="p-3 border border-red-300 rounded-lg bg-red-50 flex justify-between items-center">
+                <span class="text-sm font-medium text-red-700">Wipe All Demo Data (DANGER!)</span>
+                <button id="wipe-data-btn" class="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-700 transition text-sm">WIPE</button>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    // --- CONFIGURATION & LOCAL STORAGE KEYS ---
+    const USERS_KEY = 'users'; // Contains both common and ngo types
+    const PET_POSTS_KEY = 'petPosts';
+    const STRAY_REPORTS_KEY = 'strayReports';
+    const SURRENDER_REQUESTS_KEY = 'surrenderRequests'; 
+    const ADOPTION_APPLICATIONS_KEY = 'adoptionApplications'; 
+    const LOGGED_IN_USER_KEY = 'loggedInUser';
+    // ADMIN-SPECIFIC CONFIG KEY
+    const ADMIN_CONFIG_KEY = 'adminConfig'; 
+
+    // Utility to get/set data from localStorage
+    const getStorage = (key, defaultValue = []) => {
+        try {
+            const data = localStorage.getItem(key);
+            if (!data) return defaultValue;
+            const parsed = JSON.parse(data);
+            return Array.isArray(defaultValue) ? (Array.isArray(parsed) ? parsed : defaultValue) : (typeof parsed === 'object' && parsed !== null ? parsed : defaultValue);
+        } catch (e) {
+            console.error("Error reading localStorage key:", key, e);
+            return defaultValue;
+        }
+    };
+    const setStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+    
+    // --- AUTH CHECK (REMOVED FOR DEMO) ---
+    // const loggedInUser = getStorage(LOGGED_IN_USER_KEY, null);
+    // if (!loggedInUser || loggedInUser.type !== 'admin') {
+    //      window.location.href = 'login.html'; 
+    //      return;
+    // }
+    
+    // document.getElementById('admin-user-info').textContent = `Logged in as: ${loggedInUser.email}`;
+
+    // --- UTILITY FUNCTIONS ---
+    function getAllData() {
+        return {
+            users: getStorage(USERS_KEY, []),
+            pets: getStorage(PET_POSTS_KEY, []),
+            reports: getStorage(STRAY_REPORTS_KEY, []),
+            surrenders: getStorage(SURRENDER_REQUESTS_KEY, []),
+            applications: getStorage(ADOPTION_APPLICATIONS_KEY, [])
+        };
+    }
+
+    function updateStats() {
+        const { users, reports, pets } = getAllData();
+        const activeNgos = users.filter(u => u.type === 'ngo').length;
+        
+        document.getElementById('stat-total-users').textContent = users.length;
+        document.getElementById('stat-active-ngos').textContent = activeNgos;
+        document.getElementById('stat-pending-reports').textContent = reports.length;
+        document.getElementById('stat-total-pets').textContent = pets.length;
+    }
+
+    // --- 1. USER MANAGEMENT LOGIC ---
+    const userTableBody = document.getElementById('user-table-body');
+    const userTabBtns = document.querySelectorAll('.user-tab-btn');
+    const noUsersMsg = document.getElementById('no-users-msg');
+    
+    let currentFilter = 'all';
+
+    function renderUserList() {
+        let users = getStorage(USERS_KEY, []);
+        userTableBody.innerHTML = '';
+        
+        // Apply filter
+        if (currentFilter !== 'all') {
+            users = users.filter(u => u.type === currentFilter);
+        }
+        
+        if (users.length === 0) {
+            noUsersMsg.classList.remove('hidden');
+            return;
+        }
+        noUsersMsg.classList.add('hidden');
+
+        users.forEach(user => {
+            const nameDisplay = user.name || user.orgname || (user.email ? user.email.split('@')[0] : 'N/A');
+            const typeClass = user.type === 'ngo' ? 'text-teal-600' : 'text-gray-600';
+            
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-indigo-50';
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.id || 'N/A'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${nameDisplay} <span class="text-xs text-gray-500 block">${user.email}</span></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm ${typeClass}">${user.type.toUpperCase()}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button onclick="deleteUser('${user.email}')" class="text-red-600 hover:text-red-900 ml-2" title="Delete Account"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button>
+                    <button onclick="toggleSuspension('${user.email}')" class="text-yellow-600 hover:text-yellow-900 ml-2" title="Ban/Unban User"><i data-lucide="user-x" class="w-4 h-4 inline"></i></button>
+                    ${user.type === 'ngo' ? `<button class="text-blue-600 hover:text-blue-900 ml-2" title="Verify/Unverify NGO"><i data-lucide="check-circle" class="w-4 h-4 inline"></i></button>` : ''}
+                </td>
+            `;
+            userTableBody.appendChild(row);
+        });
+        lucide.createIcons();
+    }
+    
+    userTabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            userTabBtns.forEach(b => {
+                b.classList.remove('border-indigo-600', 'text-indigo-600');
+                b.classList.add('border-transparent', 'text-gray-500');
+            });
+            e.target.classList.add('border-indigo-600', 'text-indigo-600');
+            e.target.classList.remove('border-transparent', 'text-gray-500');
+            currentFilter = e.target.getAttribute('data-usertype');
+            renderUserList();
+        });
+    });
+
+    window.deleteUser = (email) => {
+        if (!confirm(`Are you sure you want to PERMANENTLY delete account for ${email}?`)) return;
+        let users = getStorage(USERS_KEY, []);
+        users = users.filter(u => u.email !== email);
+        setStorage(USERS_KEY, users);
+        renderUserList();
+        updateStats();
+        alert(`User ${email} deleted.`);
+    }
+
+    window.toggleSuspension = (email) => {
+        alert(`(Mock Action) Account suspension toggled for ${email}. This would prevent login.`);
+        // In a real app, you would update a 'is_suspended' property in the user object.
+    }
+
+
+    // --- 2. CONTENT MANAGEMENT LOGIC ---
+    const allPetPostsList = document.getElementById('all-pet-posts-list');
+    
+    function renderAllAdminPets() {
+        const posts = getStorage(PET_POSTS_KEY, []);
+        allPetPostsList.innerHTML = '';
+        
+        if (posts.length === 0) {
+            document.getElementById('no-content-msg').classList.remove('hidden');
+            return;
+        }
+        document.getElementById('no-content-msg').classList.add('hidden');
+        
+        posts.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+        posts.forEach(p => {
+            const statusColor = p.status === 'Adoption Pending' ? 'bg-yellow-500' : (p.status === 'Adopted' ? 'bg-red-500' : 'bg-blue-600');
+            const img_url = p.img_url || '' + p.id;
+
+            const div = document.createElement('div');
+            div.className = 'bg-white rounded-xl shadow-lg overflow-hidden fade-in relative';
+            div.innerHTML = `
+                <img src="${img_url}" class="w-full h-40 object-cover" alt="${p.name}">
+                <div class="absolute top-3 left-3 text-white text-xs font-semibold px-3 py-1 rounded-full ${statusColor}">${p.status}</div>
+                <div class="p-4">
+                    <h3 class="font-bold text-lg text-indigo-700">${p.name}</h3>
+                    <p class="text-xs text-gray-500">Posted by: NGO (ID ${p.id})</p>
+                    <p class="text-sm text-gray-600">${p.breed} | Age: ${p.age}</p>
+                    <div class="flex justify-between mt-3 border-t pt-3">
+                        <button onclick="adminDeletePet(${p.id})" class="text-red-600 hover:text-red-800 text-sm flex items-center gap-1" title="Delete Post">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
+                        </button>
+                        <button onclick="adminChangeStatus(${p.id})" class="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1" title="Force Change Status">
+                            <i data-lucide="pencil" class="w-4 h-4"></i> Edit Status
+                        </button>
+                    </div>
+                </div>
+            `;
+            allPetPostsList.appendChild(div);
+        });
+        lucide.createIcons();
+    }
+    
+    window.adminDeletePet = (id) => {
+        if (!confirm('ADMIN: Are you sure you want to delete this pet post regardless of the NGO?')) return;
+        let posts = getStorage(PET_POSTS_KEY, []);
+        posts = posts.filter(p => p.id !== id);
+        setStorage(PET_POSTS_KEY, posts);
+        renderAllAdminPets();
+        updateStats();
+        alert(`Pet post ${id} deleted.`);
+    }
+
+    window.adminChangeStatus = (id) => {
+        const newStatus = prompt("ADMIN: Enter new status (Available, Adoption Pending, Adopted):");
+        if (!newStatus) return;
+
+        let posts = getStorage(PET_POSTS_KEY, []);
+        const pet = posts.find(p => p.id === id);
+        if (pet) {
+            pet.status = newStatus.trim();
+            setStorage(PET_POSTS_KEY, posts);
+            renderAllAdminPets();
+            alert(`Pet status for ${pet.name} force-updated to ${newStatus}.`);
+        }
+    }
+
+
+    // --- 3. MODERATION CENTER LOGIC ---
+    const adminStrayReportsList = document.getElementById('admin-stray-reports-list');
+    const adminNoStrayReportsMsg = document.getElementById('admin-no-stray-reports-msg');
+    const adminAuditList = document.getElementById('admin-audit-list');
+
+    function renderModerationCenter() {
+        // Render Stray Reports
+        let reports = getStorage(STRAY_REPORTS_KEY, []);
+        adminStrayReportsList.innerHTML = '';
+
+        if (reports.length === 0) {
+            adminNoStrayReportsMsg.classList.remove('hidden');
+        } else {
+            adminNoStrayReportsMsg.classList.add('hidden');
+            reports.forEach(report => {
+                const card = document.createElement('div');
+                let urgencyColor = report.urgency === 'High' ? 'bg-red-100 border-red-400' : (report.urgency === 'Medium' ? 'bg-yellow-100 border-yellow-400' : 'bg-gray-100 border-gray-400');
+                
+                card.className = `p-3 rounded-lg shadow-sm border-l-4 ${urgencyColor}`;
+                card.innerHTML = `
+                    <p class="font-semibold text-gray-800">${report.type} - ${report.location}</p>
+                    <p class="text-xs text-gray-700 italic mt-1 line-clamp-2">${report.sighting_details}</p>
+                    <div class="flex justify-end gap-2 mt-2">
+                        <button onclick="adminHandleStrayReport(${report.id}, 'Rescued')" class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700">Rescued</button>
+                        <button onclick="adminHandleStrayReport(${report.id}, 'Dismissed')" class="px-3 py-1 bg-gray-400 text-gray-800 rounded text-xs hover:bg-gray-500">Dismiss</button>
+                    </div>
+                `;
+                adminStrayReportsList.appendChild(card);
+            });
+        }
+        
+        // Render Audit Log (Surrenders + Applications)
+        adminAuditList.innerHTML = '';
+        const surrenders = getStorage(SURRENDER_REQUESTS_KEY, []);
+        const applications = getStorage(ADOPTION_APPLICATIONS_KEY, []);
+        
+        const auditItems = [
+            ...surrenders.map(item => ({...item, type: 'Surrender', display: `[SURRENDER] ${item.name} to ${item.targetNgo}`, submitted_at: item.submitted_at || new Date()})),
+            ...applications.map(item => ({...item, type: 'Adoption', display: `[ADOPTION] ${item.pet_name} by ${item.applicant_name}`, submitted_at: item.submitted_at || new Date()}))
+        ].sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at)).slice(0, 5); // Show latest 5
+
+        auditItems.forEach(item => {
+            const itemClass = item.type === 'Surrender' ? 'border-red-300 bg-red-50' : 'border-blue-300 bg-blue-50';
+            const div = document.createElement('div');
+            div.className = `p-3 border-l-4 rounded-lg text-sm ${itemClass}`;
+            div.innerHTML = `
+                <p class="font-semibold text-gray-800">${item.type} Request</p>
+                <p class="text-xs text-gray-600">${item.display}</p>
+                <p class="text-xs text-gray-400 mt-1">${new Date(item.submitted_at).toLocaleDateString()}</p>
+            `;
+            adminAuditList.appendChild(div);
+        });
+
+        lucide.createIcons();
+        updateStats();
+    }
+
+    window.adminHandleStrayReport = (id, action) => {
+        if (!confirm(`ADMIN: Mark report ${id} as ${action}?`)) return;
+        let reports = getStorage(STRAY_REPORTS_KEY, []);
+        reports = reports.filter(req => req.id !== id);
+        setStorage(STRAY_REPORTS_KEY, reports);
+        renderModerationCenter();
+        updateStats();
+        alert(`Report ${id} marked as ${action} and removed.`);
+    }
+
+    // --- 4. SYSTEM SETTINGS LOGIC ---
+    const maintenanceModeToggle = document.getElementById('maintenance-mode');
+    const manageBreedsTextarea = document.getElementById('manage-breeds');
+    const saveConfigBtn = document.getElementById('save-config-btn');
+    const wipeDataBtn = document.getElementById('wipe-data-btn');
+
+    function loadSystemSettings() {
+        const config = getStorage(ADMIN_CONFIG_KEY, { maintenanceMode: false, breeds: 'Dog, Cat, Rabbit' });
+        maintenanceModeToggle.checked = config.maintenanceMode;
+        manageBreedsTextarea.value = config.breeds;
+    }
+
+    saveConfigBtn.addEventListener('click', () => {
+        const newConfig = {
+            maintenanceMode: maintenanceModeToggle.checked,
+            breeds: manageBreedsTextarea.value.trim()
+        };
+        setStorage(ADMIN_CONFIG_KEY, newConfig);
+        alert('System configuration saved!');
+    });
+
+    wipeDataBtn.addEventListener('click', () => {
+        if (confirm("ADMIN WARNING: ARE YOU ABSOLUTELY SURE? This will delete ALL users, pets, reports, and applications!")) {
+            if (confirm("FINAL CONFIRMATION: This action is irreversible.")) {
+                localStorage.removeItem(USERS_KEY);
+                localStorage.removeItem(PET_POSTS_KEY);
+                localStorage.removeItem(STRAY_REPORTS_KEY);
+                localStorage.removeItem(SURRENDER_REQUESTS_KEY);
+                localStorage.removeItem(ADOPTION_APPLICATIONS_KEY);
+                alert("ALL DATA WIPED. Please reload the dashboard to see the reset state.");
+                // Optionally reload to clean slate: window.location.reload();
+            }
+        }
+    });
+
+    // --- INITIALIZATION ---
+    loadSystemSettings();
+    updateStats(); 
+    renderUserList(); 
+
+    // --- NAVIGATION HANDLER (Reused from NGO Dashboard) ---
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('main section');
+
+    navBtns.forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            navBtns.forEach(b=>b.classList.remove('active-nav'));
+            btn.classList.add('active-nav');
+            const target=btn.getAttribute('data-target');
+            sections.forEach(sec=>{
+                sec.classList.add('hidden');
+                if(sec.id===target){
+                    sec.classList.remove('hidden');
+                    sec.classList.add('fade-in');
+                }
+            });
+            // Refresh content when navigating
+            if(target === 'dashboard') updateStats();
+            if(target === 'users') renderUserList();
+            if(target === 'content') renderAllAdminPets();
+            if(target === 'moderation') renderModerationCenter();
+            if(target === 'system') loadSystemSettings(); 
+        });
+    });
+
+    // Logout
+    document.getElementById('admin-logout-btn').addEventListener('click', () => {
+        localStorage.removeItem(LOGGED_IN_USER_KEY);
+        window.location.href = 'login.html';
+    });
+
+    // Initial view rendering
+    document.querySelector('.nav-btn[data-target="dashboard"]').click();
+});
+</script>
+
+</body>
+</html>

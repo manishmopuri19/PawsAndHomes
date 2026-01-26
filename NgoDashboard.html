@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Dashboard - Paws & Homes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .active-nav {
+            background-color: #e0f2fe; /* light blue */
+            color: #0c4a6e; /* dark blue text */
+            font-weight: 600;
+        }
+        .main-color {
+            color: #1e40af; /* Primary blue for accents */
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex h-screen">
+
+    <aside class="w-64 bg-white shadow-xl flex flex-col p-4 border-r">
+        <a href="index.html" id="ngo-title-home" class="text-2xl font-bold main-color mb-8 cursor-pointer">Paws & Homes NGO</a>
+        
+        <div class="space-y-2 flex-grow">
+            <button class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3 text-gray-700 active-nav" data-target="posts">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+            </button>
+            <button class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3 text-gray-700" data-target="pet-management">
+                <i data-lucide="paw-print" class="w-5 h-5"></i> Pet Management
+            </button>
+            <button class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3 text-gray-700" data-target="awareness-management">
+                <i data-lucide="megaphone" class="w-5 h-5"></i> Awareness Management
+            </button>
+            <button class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3 text-gray-700" data-target="applications">
+                <i data-lucide="mail-check" class="w-5 h-5"></i> Applications & Surrenders
+            </button>
+            <button class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3 text-gray-700" data-target="stray-reports">
+                <i data-lucide="map" class="w-5 h-5"></i> Stray Reports
+            </button>
+        </div>
+
+        <div class="mt-8 border-t pt-4">
+             <div class="flex items-center gap-1 text-sm text-gray-600 mb-4" id="ngo-nav-location">
+                <i data-lucide="map-pin" class="w-3 h-3 text-blue-400"></i> Location not set
+            </div>
+            <button class="nav-btn w-full text-left p-3 rounded-lg flex items-center gap-3 text-gray-700" data-target="settings">
+                <i data-lucide="settings" class="w-5 h-5"></i> Settings
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-8">
+        
+        <div class="mb-4">
+             <a href="#" id="return-to-home-btn" class="text-sm text-gray-500 hover:text-blue-600 flex items-center gap-1">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i> Back to Dashboard
+            </a>
+        </div>
+
+
+        <section id="posts" class="fade-in">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">🐾 NGO Overview Dashboard</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-5 rounded-xl shadow flex items-center justify-between border-t-4 border-blue-500">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Available Pets</p>
+                        <p class="text-3xl font-bold text-gray-900" id="stat-available-pets">0</p>
+                    </div>
+                    <i data-lucide="paw-print" class="w-8 h-8 text-blue-500 bg-blue-100 p-2 rounded-full"></i>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow flex items-center justify-between border-t-4 border-green-500">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">New Applications</p>
+                        <p class="text-3xl font-bold text-gray-900" id="stat-application-count">0</p>
+                    </div>
+                    <i data-lucide="mail-check" class="w-8 h-8 text-green-500 bg-green-100 p-2 rounded-full"></i>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow flex items-center justify-between border-t-4 border-red-500">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Surrender Requests</p>
+                        <p class="text-3xl font-bold text-gray-900" id="stat-surrender-count">0</p>
+                    </div>
+                    <i data-lucide="rotate-ccw" class="w-8 h-8 text-red-500 bg-red-100 p-2 rounded-full"></i>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow flex items-center justify-between border-t-4 border-yellow-500">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Active Stray Reports</p>
+                        <p class="text-3xl font-bold text-gray-900" id="stat-stray-count">0</p>
+                    </div>
+                    <i data-lucide="map" class="w-8 h-8 text-yellow-500 bg-yellow-100 p-2 rounded-full"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg lg:col-span-1">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
+                    <div class="space-y-3">
+                        <button id="add-post-btn-quick" class="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-700 transition">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Create New Adoption Post
+                        </button>
+                        <button id="add-awareness-btn" class="w-full bg-purple-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-700 transition">
+                            <i data-lucide="megaphone" class="w-5 h-5"></i> Create Awareness Post
+                        </button>
+                        <a href="#" id="quick-view-reports" class="w-full bg-yellow-500 text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-yellow-600 transition">
+                             <i data-lucide="map" class="w-5 h-5"></i> View Stray Reports
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg lg:col-span-2">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Pet Activity</h2>
+                    <p class="text-gray-500">Go to **Pet Management** to view all posts, edit status, and delete records.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="pet-management" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">🐶 Pet Adoption Management</h1>
+                <button id="add-post-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition">
+                    <i data-lucide="plus" class="w-5 h-5"></i> New Post
+                </button>
+            </div>
+            
+            <div id="pet-posts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+             <div id="no-pets-msg" class="bg-white p-8 rounded-xl shadow-lg text-center text-gray-500 mt-10 hidden">
+                <i data-lucide="bone" class="w-12 h-12 mx-auto text-blue-400 mb-4"></i>
+                <p class="text-lg font-medium">No pets currently posted for adoption.</p>
+                <p>Click "New Post" to start helping an animal find a home!</p>
+            </div>
+        </section>
+
+        <section id="awareness-management" class="hidden">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">📢 Awareness Post Management</h1>
+            <div class="flex justify-end mb-6">
+                <button id="add-awareness-btn-2" class="bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-purple-700 transition">
+                    <i data-lucide="plus" class="w-5 h-5"></i> Create New Post
+                </button>
+            </div>
+            
+            <div id="awareness-posts-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+             <div id="no-awareness-msg" class="bg-white p-8 rounded-xl shadow-lg text-center text-gray-500 mt-10 hidden">
+                <i data-lucide="megaphone" class="w-12 h-12 mx-auto text-purple-400 mb-4"></i>
+                <p class="text-lg font-medium">No active awareness posts.</p>
+                <p>Click "Create New Post" to share educational content!</p>
+            </div>
+        </section>
+
+
+        <section id="applications" class="hidden">
+             <h1 class="text-3xl font-bold text-gray-800 mb-6">📥 Adoption & Surrender Queue</h1>
+
+             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Pending Adoption Applications (<span id="stat-application-count-2">0</span>)</h2>
+                    <div id="adoption-applications-list" class="space-y-4">
+                        </div>
+                     <div id="no-applications-msg" class="text-center text-gray-500 mt-4 hidden">
+                         <i data-lucide="inbox" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
+                        <p>No new adoption applications at the moment.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">New Surrender Requests (<span id="stat-surrender-count-2">0</span>)</h2>
+                    <div id="surrender-requests-list" class="space-y-4">
+                        </div>
+                    <div id="no-surrender-msg" class="text-center text-gray-500 mt-4 hidden">
+                         <i data-lucide="rotate-ccw" class="w-10 h-10 mx-auto text-red-400 mb-2"></i>
+                        <p>No new requests to surrender pets.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stray-reports" class="hidden">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">🗺️ Active Stray Animal Reports</h1>
+             
+            <div id="stray-reports-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+             <div id="no-stray-reports-msg" class="bg-white p-8 rounded-xl shadow-lg text-center text-gray-500 mt-10 hidden">
+                 <i data-lucide="map-pin" class="w-12 h-12 mx-auto text-yellow-500 mb-4"></i>
+                <p class="text-lg font-medium">No active stray animal reports.</p>
+                <p>Stay vigilant! New reports will appear here.</p>
+            </div>
+        </section>
+
+        <section id="settings" class="hidden">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">⚙️ NGO Profile Settings</h1>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg lg:col-span-2">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Organization Details</h2>
+                    <form id="profile-form" class="space-y-4">
+                        <div>
+                            <label for="profile-org-name" class="block text-sm font-medium text-gray-700">Organization Name</label>
+                            <input type="text" id="profile-org-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                        </div>
+                        <div>
+                            <label for="profile-email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="profile-email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                        </div>
+                        <div>
+                            <label for="profile-location" class="block text-sm font-medium text-gray-700">Location (City, State)</label>
+                            <input type="text" id="profile-location" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                        </div>
+                        <div>
+                            <label for="profile-website" class="block text-sm font-medium text-gray-700">Website/Social Link</label>
+                            <input type="url" id="profile-website" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                        </div>
+                         <div>
+                            <label for="profile-bio" class="block text-sm font-medium text-gray-700">Short Bio/Mission</label>
+                            <textarea id="profile-bio" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Save Settings</button>
+                    </form>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Donation QR Code</h2>
+                    <div class="mb-4">
+                        <p class="text-sm font-medium text-gray-700">Current QR Code Status: <span id="qr-status" class="font-semibold text-red-500">None Uploaded</span></p>
+                        <img id="current-qr-img" class="w-32 h-32 object-contain mt-2 border p-1 rounded-lg hidden" alt="Current Donation QR Code">
+                    </div>
+                    <label for="qr-code-file" class="block text-sm font-medium text-gray-700 mb-2">Upload New QR Code Image</label>
+                    <input type="file" id="qr-code-file" accept="image/*" class="block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-blue-50 file:text-blue-700
+                        hover:file:bg-blue-100
+                    ">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="post-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl p-8 w-full max-w-lg shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">New Pet Adoption Post</h3>
+                <button id="close-post-modal" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="pet-post-form" class="space-y-4">
+                <div>
+                    <label for="pet-name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="pet-name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                </div>
+
+                <div>
+                    <label for="pet-photo-file" class="block text-sm font-medium text-gray-700">Pet Photo</label>
+                    <input type="file" id="pet-photo-file" name="img" accept="image/*" class="mt-1 block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+                        file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+                </div>
+
+                 <div>
+                    <label for="pet-document-file" class="block text-sm font-medium text-gray-700">Health Documents (PDF/JPG/PNG - Optional)</label>
+                    <input type="file" id="pet-document-file" name="documents" accept=".pdf,image/*" class="mt-1 block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+                        file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label for="pet-type" class="block text-sm font-medium text-gray-700">Type</label>
+                        <select id="pet-type" name="type" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Rabbit">Rabbit</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="pet-breed" class="block text-sm font-medium text-gray-700">Breed</label>
+                        <input type="text" id="pet-breed" name="breed" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label for="pet-age" class="block text-sm font-medium text-gray-700">Age (Years)</label>
+                        <input type="number" id="pet-age" name="age" min="0" step="0.1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div class="flex-1">
+                        <label for="pet-gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                        <select id="pet-gender" name="gender" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="pet-description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="pet-description" name="description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-green-700 transition font-semibold mt-6">
+                    <i data-lucide="send" class="w-5 h-5"></i> Post Pet for Adoption
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="awareness-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl p-8 w-full max-w-lg shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Create Awareness Post</h3>
+                <button id="close-awareness-modal" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="awareness-post-form" class="space-y-4">
+                <div>
+                    <label for="awareness-title" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" id="awareness-title" name="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                </div>
+
+                <div>
+                    <label for="awareness-cover-file" class="block text-sm font-medium text-gray-700">Cover Image/Graphic</label>
+                    <input type="file" id="awareness-cover-file" name="cover_img" accept="image/*" class="mt-1 block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+                        file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" required>
+                </div>
+
+                 <div>
+                    <label for="awareness-document-file" class="block text-sm font-medium text-gray-700">Document/File (e.g., PDF guide, infographic)</label>
+                    <input type="file" id="awareness-document-file" name="document_file" accept=".pdf,image/*" class="mt-1 block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+                        file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" required>
+                </div>
+
+                <div>
+                    <label for="awareness-motivation" class="block text-sm font-medium text-gray-700">Motivation/Description</label>
+                    <textarea id="awareness-motivation" name="motivation" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-700 transition font-semibold mt-6">
+                    <i data-lucide="upload" class="w-5 h-5"></i> Publish Awareness Post
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    // --- CONFIGURATION & LOCAL STORAGE SETUP ---
+    const PET_POSTS_KEY = 'petPosts'; 
+    const AVAILABLE_PETS_KEY = 'availablePets'; 
+    const AWARENESS_POSTS_KEY = 'awarenessPosts'; 
+    const QR_CODE_KEY = 'ngoQrCode';
+    const SURRENDER_REQUESTS_KEY = 'surrenderRequests'; 
+    const NGO_SETTINGS_KEY = 'ngoSettings'; 
+    const ADOPTION_APPLICATIONS_KEY = 'adoptionApplications'; 
+    const STRAY_REPORTS_KEY = 'strayReports'; 
+
+    // Utility to get/set data from localStorage
+    const getStorage = (key, defaultValue = []) => {
+        try {
+            const data = localStorage.getItem(key);
+            if (data === null) return defaultValue;
+            return JSON.parse(data) || defaultValue;
+        } catch (e) {
+            console.error("Error reading localStorage key:", key, e);
+            return defaultValue;
+        }
+    };
+    const setStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+    
+    // --- DATA INITIALIZATION ---
+    let petPosts = getStorage(PET_POSTS_KEY, []);
+    let adoptionApplications = getStorage(ADOPTION_APPLICATIONS_KEY, []);
+    let strayReports = getStorage(STRAY_REPORTS_KEY, []);
+    let surrenderRequests = getStorage(SURRENDER_REQUESTS_KEY, []);
+    let awarenessPosts = getStorage(AWARENESS_POSTS_KEY, []); 
+    setStorage(PET_POSTS_KEY, petPosts);
+    setStorage(ADOPTION_APPLICATIONS_KEY, adoptionApplications);
+    setStorage(STRAY_REPORTS_KEY, strayReports);
+    setStorage(SURRENDER_REQUESTS_KEY, surrenderRequests);
+    setStorage(AWARENESS_POSTS_KEY, awarenessPosts); 
+
+    // Helper to read file as Data URL
+    const readFileAsDataURL = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => resolve(event.target.result);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+    };
+
+    // --- STATS RENDER ---
+    const availablePetsStat = document.getElementById('stat-available-pets');
+
+    function updateStats() {
+        const currentPets = getStorage(PET_POSTS_KEY);
+        const currentReports = getStorage(STRAY_REPORTS_KEY);
+        const currentApplications = getStorage(ADOPTION_APPLICATIONS_KEY);
+        const currentSurrenders = getStorage(SURRENDER_REQUESTS_KEY);
+
+        const availableCount = currentPets.filter(p => p.status === 'Available').length;
+        availablePetsStat.textContent = availableCount;
+        
+        document.getElementById('stat-surrender-count').textContent = currentSurrenders.length;
+        document.getElementById('stat-stray-count').textContent = currentReports.length;
+        document.getElementById('stat-application-count').textContent = currentApplications.length;
+
+        if(document.getElementById('stat-application-count-2')) {
+            document.getElementById('stat-application-count-2').textContent = currentApplications.length;
+        }
+         if(document.getElementById('stat-surrender-count-2')) {
+            document.getElementById('stat-surrender-count-2').textContent = currentSurrenders.length;
+        }
+    }
+
+    // --- NAVIGATION & MODALS ---
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('main section');
+    const addPostBtn = document.getElementById('add-post-btn');
+    const addPostBtnQuick = document.getElementById('add-post-btn-quick');
+    const returnToHomeBtn = document.getElementById('return-to-home-btn'); 
+    // ngoTitleHome is now handled by its href="index.html" attribute
+
+    // Function to click the dashboard button
+    const goToDashboard = () => {
+        document.querySelector('.nav-btn[data-target="posts"]').click();
+    };
+
+    // Handle 'Back to Dashboard' button
+    if (returnToHomeBtn) {
+        returnToHomeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            goToDashboard();
+        });
+    }
+
+    // Pet Post Modal Handlers
+    const postModal=document.getElementById('post-modal'),
+              closePostBtn=document.getElementById('close-post-modal');
+    const openPostModal = () => {
+        document.getElementById('pet-post-form').reset();
+        postModal.classList.remove('hidden');
+    };
+    if (addPostBtn) addPostBtn.onclick = openPostModal;
+    if (addPostBtnQuick) addPostBtnQuick.onclick = openPostModal;
+    closePostBtn.onclick=()=>postModal.classList.add('hidden');
+
+    // Awareness Modal Handlers
+    const awarenessModal = document.getElementById('awareness-modal');
+    const closeAwarenessBtn = document.getElementById('close-awareness-modal');
+    const addAwarenessBtn = document.getElementById('add-awareness-btn');
+    const addAwarenessBtn2 = document.getElementById('add-awareness-btn-2');
+
+    const openAwarenessModal = () => {
+        document.getElementById('awareness-post-form').reset();
+        awarenessModal.classList.remove('hidden');
+    };
+    if (addAwarenessBtn) addAwarenessBtn.onclick = openAwarenessModal;
+    if (addAwarenessBtn2) addAwarenessBtn2.onclick = openAwarenessModal;
+    closeAwarenessBtn.onclick = () => awarenessModal.classList.add('hidden');
+
+    // Navigation logic 
+    navBtns.forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            navBtns.forEach(b=>b.classList.remove('active-nav'));
+            btn.classList.add('active-nav');
+            const target=btn.getAttribute('data-target');
+            sections.forEach(sec=>{
+                sec.classList.add('hidden');
+                if(sec.id===target){
+                    sec.classList.remove('hidden');
+                    sec.classList.add('fade-in');
+                }
+            });
+            updateStats();
+            if(target === 'pet-management') renderAllPets();
+            if(target === 'awareness-management') renderAwarenessPosts(); 
+            if(target === 'applications') {
+                renderSurrenderRequests();
+                renderAdoptionApplications(); 
+            }
+            if(target === 'stray-reports') renderStrayReports(); 
+            if(target === 'settings') loadNGOSettings(); 
+        });
+    });
+
+
+    // --- PET POST CREATION & RENDERING ---
+    const petContainer=document.getElementById('pet-posts');
+    const noPetsMsg=document.getElementById('no-pets-msg');
+    const petPostForm = document.getElementById('pet-post-form');
+
+    function updatePublicAvailablePets() {
+        const allPosts = getStorage(PET_POSTS_KEY);
+        const available = allPosts.filter(p => p.status === 'Available');
+        setStorage(AVAILABLE_PETS_KEY, available);
+    }
+    
+    function renderAllPets() {
+        const currentPetPosts = getStorage(PET_POSTS_KEY);
+        petContainer.innerHTML = '';
+        
+        currentPetPosts.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+        if (currentPetPosts.length === 0) {
+            noPetsMsg.classList.remove('hidden');
+            return;
+        }
+        noPetsMsg.classList.add('hidden');
+
+        currentPetPosts.forEach(pet => {
+            const card = document.createElement('div');
+            let statusColor = 'bg-blue-100 text-blue-800';
+            if (pet.status === 'Adoption Pending') statusColor = 'bg-yellow-100 text-yellow-800';
+            if (pet.status === 'Adopted') statusColor = 'bg-green-100 text-green-800';
+
+            card.className = 'bg-white rounded-xl shadow-lg overflow-hidden flex flex-col hover:shadow-xl transition duration-300';
+            card.innerHTML = `
+                <div class="relative h-48 w-full bg-gray-200">
+                    <img src="${pet.img}" alt="${pet.name}" class="w-full h-full object-cover">
+                    <span class="absolute top-2 right-2 text-xs font-semibold px-3 py-1 rounded-full ${statusColor}">
+                        ${pet.status}
+                    </span>
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="text-2xl font-bold text-gray-800 main-color mb-1">${pet.name}</h3>
+                    <p class="text-sm text-gray-500 mb-3">${pet.breed} - ${pet.age} yrs (${pet.gender})</p>
+                    <p class="text-sm text-gray-700 line-clamp-2">${pet.description}</p>
+                    ${pet.documents ? `<p class="text-xs text-blue-500 flex items-center gap-1 mt-1"><i data-lucide="file-text" class="w-3 h-3"></i> Documents Attached</p>` : ''}
+                    <div class="mt-auto pt-4 flex justify-between gap-2 border-t pt-3">
+                        <button onclick="handleMarkAsAdopted(${pet.id})" class="text-xs font-medium px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600 transition" ${pet.status === 'Adopted' ? 'disabled style="opacity:0.6;"' : ''}>
+                            ${pet.status === 'Adopted' ? 'Adopted 🎉' : 'Mark Adopted'}
+                        </button>
+                        <button onclick="handleDeletePet(${pet.id})" class="text-xs font-medium px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 transition">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            petContainer.appendChild(card);
+        });
+        lucide.createIcons();
+        updateStats();
+    }
+
+    // Handlers 
+    window.handleDeletePet = (id) => {
+        if (!confirm('Are you sure you want to permanently delete this pet post?')) return;
+        let posts = getStorage(PET_POSTS_KEY);
+        posts = posts.filter(p => p.id !== id);
+        setStorage(PET_POSTS_KEY, posts);
+        updatePublicAvailablePets();
+        renderAllPets();
+        alert('Pet post deleted successfully.');
+    };
+
+    window.handleMarkAsAdopted = (id) => {
+        if (!confirm('Are you sure you want to mark this pet as ADOPTED? This will remove it from the public adoption page.')) return;
+        let posts = getStorage(PET_POSTS_KEY);
+        const petIndex = posts.findIndex(p => p.id === id);
+        if (petIndex !== -1) {
+            posts[petIndex].status = 'Adopted'; 
+            setStorage(PET_POSTS_KEY, posts);
+            updatePublicAvailablePets(); 
+            renderAllPets();
+            alert(`${posts[petIndex].name} has been marked as Adopted! Congratulations!`);
+        }
+    }
+
+    // --- PET POST SUBMISSION ---
+    petPostForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(petPostForm);
+        const newPet = {};
+        
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'img' && key !== 'documents') {
+                newPet[key] = value;
+            }
+        }
+
+        const imageFile = formData.get('img');
+        if (!imageFile || imageFile.size === 0) {
+            alert('Please upload a pet photo.');
+            return;
+        }
+
+        try {
+            newPet.img = await readFileAsDataURL(imageFile);
+            const documentFile = formData.get('documents');
+            if (documentFile && documentFile.size > 0) {
+                 if (documentFile.size > 5 * 1024 * 1024) { 
+                    alert('Document file size exceeds 5MB limit. Skipping document upload.');
+                    newPet.documents = null; 
+                 } else {
+                    newPet.documents = await readFileAsDataURL(documentFile);
+                 }
+            } else {
+                newPet.documents = null;
+            }
+            
+            newPet.id = Date.now();
+            newPet.created_at = new Date().toISOString();
+            newPet.status = 'Available'; 
+
+            let posts = getStorage(PET_POSTS_KEY);
+            posts.push(newPet);
+            setStorage(PET_POSTS_KEY, posts);
+            
+            updatePublicAvailablePets();
+            
+            postModal.classList.add('hidden');
+            renderAllPets();
+            alert(`${newPet.name} posted successfully and is now available for adoption!`);
+        } catch (error) {
+            console.error("File reading error:", error);
+            alert('An error occurred during file processing.');
+        }
+    });
+
+    // --- AWARENESS POST MANAGEMENT ---
+    const awarenessPostsContainer = document.getElementById('awareness-posts-list');
+    const noAwarenessMsg = document.getElementById('no-awareness-msg');
+
+    function renderAwarenessPosts() {
+        const posts = getStorage(AWARENESS_POSTS_KEY);
+        awarenessPostsContainer.innerHTML = '';
+        
+        if (posts.length === 0) {
+            noAwarenessMsg.classList.remove('hidden');
+            return;
+        }
+        noAwarenessMsg.classList.add('hidden');
+
+        posts.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+        posts.forEach(post => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg overflow-hidden flex flex-col hover:shadow-xl transition duration-300';
+            
+            // Check if the document is a PDF or image to display it properly
+            const isPdf = post.document_file && post.document_file.startsWith('data:application/pdf');
+            const fileText = isPdf ? 'View PDF Document' : 'View File (Image)';
+
+            card.innerHTML = `
+                <div class="relative h-40 w-full bg-gray-200">
+                    <img src="${post.cover_img}" alt="Cover Image for ${post.title}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-gray-800 text-purple-600 mb-2">${post.title}</h3>
+                    <p class="text-sm text-gray-600 line-clamp-3">${post.motivation}</p>
+                    
+                    <a href="${post.document_file}" target="_blank" class="text-xs text-blue-500 hover:text-blue-700 flex items-center gap-1 mt-3 font-semibold">
+                        <i data-lucide="${isPdf ? 'file-text' : 'file'}" class="w-4 h-4"></i>
+                        ${fileText}
+                    </a>
+
+                    <div class="mt-auto pt-4 flex justify-end border-t pt-3">
+                        <button onclick="handleDeleteAwarenessPost(${post.id})" class="text-xs font-medium px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 transition">
+                            Delete Post
+                        </button>
+                    </div>
+                </div>
+            `;
+            awarenessPostsContainer.appendChild(card);
+        });
+        lucide.createIcons();
+    }
+
+    window.handleDeleteAwarenessPost = (id) => {
+        if (!confirm('Are you sure you want to permanently delete this awareness post?')) return;
+        
+        let posts = getStorage(AWARENESS_POSTS_KEY);
+        posts = posts.filter(p => p.id !== id);
+        setStorage(AWARENESS_POSTS_KEY, posts);
+        renderAwarenessPosts();
+        alert('Awareness post deleted successfully.');
+    };
+
+    // --- AWARENESS POST SUBMISSION ---
+    const awarenessPostForm = document.getElementById('awareness-post-form');
+
+    awarenessPostForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(awarenessPostForm);
+        const newPost = {};
+
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'cover_img' && key !== 'document_file') {
+                newPost[key] = value;
+            }
+        }
+        
+        const coverImageFile = formData.get('cover_img');
+        const documentFile = formData.get('document_file');
+        
+        if (!coverImageFile || coverImageFile.size === 0) {
+            alert('Please upload a cover image.');
+            return;
+        }
+        if (!documentFile || documentFile.size === 0) {
+            alert('Please upload a document/file for the campaign.');
+            return;
+        }
+
+        try {
+            newPost.cover_img = await readFileAsDataURL(coverImageFile);
+            newPost.document_file = await readFileAsDataURL(documentFile);
+            
+            newPost.id = Date.now();
+            newPost.created_at = new Date().toISOString();
+
+            let posts = getStorage(AWARENESS_POSTS_KEY);
+            posts.push(newPost);
+            setStorage(AWARENESS_POSTS_KEY, posts);
+            
+            awarenessModal.classList.add('hidden');
+            renderAwarenessPosts(); 
+            alert(`${newPost.title} awareness post published successfully!`);
+
+        } catch (error) {
+             console.error("Awareness post file reading error:", error);
+            alert('An error occurred during file processing for the awareness post.');
+        }
+    });
+
+    // --- NGO SETTINGS HANDLER ---
+    const profileForm = document.getElementById('profile-form');
+    const orgNameInput = document.getElementById('profile-org-name');
+    const emailInput = document.getElementById('profile-email');
+    const bioTextarea = document.getElementById('profile-bio'); 
+    const websiteInput = document.getElementById('profile-website');
+    const locationInput = document.getElementById('profile-location');
+    const ngoNavLocation = document.getElementById('ngo-nav-location');
+
+    function loadNGOSettings() {
+        const defaultSettings = {
+            name: 'Paws & Homes Rescue', 
+            email: 'contact@pawshomes.org', 
+            bio: 'We are a non-profit dedicated to finding loving homes for rescued animals in the local area.',
+            website: 'https://www.pawshomes.org',
+            location: 'City, State'
+        };
+        const settings = getStorage(NGO_SETTINGS_KEY, defaultSettings);
+
+        orgNameInput.value = settings.name || defaultSettings.name;
+        emailInput.value = settings.email || defaultSettings.email;
+        bioTextarea.value = settings.bio || defaultSettings.bio; 
+        websiteInput.value = settings.website || defaultSettings.website;
+        locationInput.value = settings.location || defaultSettings.location;
+        
+        ngoNavLocation.innerHTML = `<i data-lucide="map-pin" class="w-3 h-3 text-blue-400"></i> ${settings.location || 'Location not set'}`;
+        
+        loadQrCode();
+        lucide.createIcons();
+    }
+
+    profileForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const newSettings = {
+            name: orgNameInput.value,
+            email: emailInput.value,
+            bio: bioTextarea.value, 
+            website: websiteInput.value,
+            location: locationInput.value,
+            qrCode: localStorage.getItem(QR_CODE_KEY) 
+        };
+        
+        setStorage(NGO_SETTINGS_KEY, newSettings);
+        loadNGOSettings(); 
+        alert('NGO settings, including your Location, saved successfully!');
+    });
+
+
+    // --- QR CODE HANDLER ---
+    const qrCodeFile = document.getElementById('qr-code-file');
+    const qrStatus = document.getElementById('qr-status');
+    const currentQrImg = document.getElementById('current-qr-img');
+
+    function loadQrCode() {
+        const qrDataUrl = localStorage.getItem(QR_CODE_KEY);
+        if (qrDataUrl) {
+            currentQrImg.src = qrDataUrl;
+            currentQrImg.classList.remove('hidden');
+            qrStatus.textContent = 'Uploaded';
+            qrStatus.classList.remove('text-red-500');
+            qrStatus.classList.add('text-blue-500');
+        } else {
+            currentQrImg.classList.add('hidden');
+            qrStatus.textContent = 'None Uploaded';
+            qrStatus.classList.add('text-red-500');
+            qrStatus.classList.remove('text-blue-500');
+        }
+    }
+
+    qrCodeFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                localStorage.setItem(QR_CODE_KEY, event.target.result);
+                loadQrCode();
+                alert('New QR Code staged. Click "Save Settings" above to confirm.');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+
+    // --- SURRENDER REQUESTS HANDLER ---
+    function renderSurrenderRequests() {
+        const requestsContainer = document.getElementById('surrender-requests-list');
+        const noRequestsMsg = document.getElementById('no-surrender-msg');
+        let requests = getStorage(SURRENDER_REQUESTS_KEY);
+        requestsContainer.innerHTML = '';
+        if (requests.length === 0) {
+            noRequestsMsg.classList.remove('hidden');
+            return;
+        }
+        noRequestsMsg.classList.add('hidden');
+        requests.forEach(req => {
+            const card = document.createElement('div');
+            card.className = 'border p-4 rounded-lg bg-red-50/50 flex flex-col gap-2';
+            const imgUrl = req.picture || 'https://picsum.photos/60/60?random=' + req.id; 
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-3">
+                        <img src="${imgUrl}" class="w-12 h-12 object-cover rounded-full border border-red-300" alt="${req.name}">
+                        <div>
+                            <p class="font-semibold text-lg text-gray-800">${req.name} (${req.gender})</p>
+                            <p class="text-xs text-gray-600">Submitted by: ${req.ownerName}</p>
+                        </div>
+                    </div>
+                    <span class="text-sm font-medium text-red-600">${req.age} Years Old</span>
+                </div>
+                <p class="text-sm text-gray-700 line-clamp-2 mt-1">
+                    **Reason/Details:** ${req.description}
+                </p>
+                <div class="flex justify-end gap-2 mt-2">
+                    <button onclick="handleSurrenderRequest(${req.id}, 'approved')" class="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600">Accept</button>
+                    <button onclick="handleSurrenderRequest(${req.id}, 'rejected')" class="px-3 py-1 bg-gray-300 text-gray-800 rounded text-xs hover:bg-gray-400">Reject</button>
+                </div>
+            `;
+            requestsContainer.prepend(card);
+        });
+        lucide.createIcons();
+    }
+
+    window.handleSurrenderRequest = (id, action) => {
+        if (!confirm(`Are you sure you want to mark this surrender request as ${action}? This will remove it from the queue.`)) {
+            return;
+        }
+        let requests = getStorage(SURRENDER_REQUESTS_KEY);
+        requests = requests.filter(req => req.id !== id);
+        setStorage(SURRENDER_REQUESTS_KEY, requests);
+        renderSurrenderRequests();
+        updateStats();
+        alert(`Surrender request ${action}ed.`);
+    }
+
+    // --- ADOPTION APPLICATIONS HANDLER ---
+    function renderAdoptionApplications() {
+        const applicationsContainer = document.getElementById('adoption-applications-list');
+        const noApplicationsMsg = document.getElementById('no-applications-msg');
+        let applications = getStorage(ADOPTION_APPLICATIONS_KEY);
+        applicationsContainer.innerHTML = '';
+        if (applications.length === 0) {
+            noApplicationsMsg.classList.remove('hidden');
+            return;
+        }
+        noApplicationsMsg.classList.add('hidden');
+        applications.forEach(app => {
+            const card = document.createElement('div');
+            card.className = 'border p-4 rounded-lg bg-green-50/50 flex flex-col gap-2 hover:shadow-md transition';
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-semibold text-gray-800">Application for: <span class="text-blue-600">${app.pet_name}</span></p>
+                        <p class="text-sm text-gray-500">Applicant: ${app.applicant_name} | Status: <span class="text-green-600">${app.status}</span></p>
+                        <p class="text-xs text-gray-400">Submitted: ${new Date(app.submitted_at).toLocaleDateString()}</p>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 mt-2">
+                    <button onclick="handleAdoptionApplication(${app.id}, 'Accepted', ${app.pet_id}, '${app.pet_name}')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 font-semibold">Accept</button>
+                    <button onclick="handleAdoptionApplication(${app.id}, 'Rejected')" class="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600">Reject</button>
+                </div>
+            `;
+            applicationsContainer.prepend(card);
+        });
+        lucide.createIcons();
+    }
+
+    window.handleAdoptionApplication = (id, action, pet_id, pet_name) => {
+        if (!confirm(`Are you sure you want to mark this application as ${action}? This will remove it from the queue.`)) {
+            return;
+        }
+        let applications = getStorage(ADOPTION_APPLICATIONS_KEY);
+        applications = applications.filter(app => app.id !== id);
+        setStorage(ADOPTION_APPLICATIONS_KEY, applications);
+        if (action === 'Accepted') {
+            let posts = getStorage(PET_POSTS_KEY);
+            const petIndex = posts.findIndex(p => p.id === pet_id);
+            if (petIndex !== -1) {
+                posts[petIndex].status = 'Adoption Pending'; 
+                setStorage(PET_POSTS_KEY, posts);
+                updatePublicAvailablePets();
+                alert(`${pet_name} has been marked as 'Adoption Pending'!`);
+            }
+        }
+        renderAdoptionApplications();
+        renderAllPets(); 
+        updateStats();
+        alert(`Application ${action} successfully.`);
+    }
+
+    // --- STRAY REPORTS HANDLER ---
+    function renderStrayReports() {
+        const reportsContainer = document.getElementById('stray-reports-list');
+        const noReportsMsg = document.getElementById('no-stray-reports-msg');
+        let reports = getStorage(STRAY_REPORTS_KEY);
+        reportsContainer.innerHTML = '';
+        if (reports.length === 0) {
+            noReportsMsg.classList.remove('hidden');
+            return;
+        }
+        noReportsMsg.classList.add('hidden');
+        reports.forEach(report => {
+            const card = document.createElement('div');
+            let urgencyColor = report.urgency === 'High' ? 'bg-red-100 border-red-400' : (report.urgency === 'Medium' ? 'bg-yellow-100 border-yellow-400' : 'bg-gray-100 border-gray-400');
+            card.className = `p-4 rounded-xl shadow-md border-l-4 ${urgencyColor} flex flex-col gap-2`;
+            card.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-lg text-gray-800">${report.type} Sighting</span>
+                    <span class="text-sm font-semibold text-white px-2 py-0.5 rounded ${report.urgency === 'High' ? 'bg-red-600' : 'bg-gray-600'}">${report.urgency}</span>
+            </div>
+            <p class="text-sm text-gray-600 flex items-center gap-1">
+                <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
+                <strong>Location:</strong> ${report.location}
+            </p>
+            <p class="text-sm text-gray-700 italic border-t pt-2">${report.sighting_details}</p>
+            <div class="flex justify-between items-center text-xs text-gray-500 mt-2">
+                <span>Reported by: ${report.reporter}</span>
+                <div class="flex gap-2">
+                    <button onclick="handleStrayReport(${report.id}, 'Rescued')" class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">Rescued</button>
+                    <button onclick="handleStrayReport(${report.id}, 'Dismissed')" class="px-3 py-1 bg-gray-400 text-gray-800 rounded text-xs hover:bg-gray-500">Dismiss</button>
+                </div>
+            </div>
+            `;
+            reportsContainer.prepend(card);
+        });
+        lucide.createIcons();
+    }
+
+    window.handleStrayReport = (id, action) => {
+        if (!confirm(`Are you sure you want to mark this stray report as ${action}? It will be removed from the list.`)) {
+            return;
+        }
+        let reports = getStorage(STRAY_REPORTS_KEY);
+        reports = reports.filter(req => req.id !== id);
+        setStorage(STRAY_REPORTS_KEY, reports);
+        renderStrayReports();
+        updateStats();
+        alert(`Report marked as ${action} and removed.`);
+    }
+
+
+    // --- INITIAL LOAD ---
+    loadNGOSettings(); 
+    updateStats();
+    // Start on the Dashboard
+    goToDashboard();
+});
+    </script>
+
+</body>
+</html>

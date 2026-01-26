@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paws & Homes | NGO Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+body { background-color: #f8fafc; color: #1e293b; }
+.fade-in { animation: fadeIn 0.4s ease-in-out forwards; opacity: 0; }
+@keyframes fadeIn { from {opacity:0; transform:translateY(8px);} to {opacity:1; transform:translateY(0);} }
+.active-nav { background-color: #e0f2fe; color: #1e40af; font-weight: 600; }
+.modal-bg { background-color: rgba(0,0,0,0.5); }
+.modal { animation: zoomIn 0.25s ease-in-out; }
+@keyframes zoomIn { from {transform:scale(0.9); opacity:0;} to {transform:scale(1); opacity:1;} }
+.btn { transition: background-color 0.2s, opacity 0.2s; }
+.btn:hover { opacity:0.9; }
+</style>
+</head>
+<body class="min-h-screen flex overflow-hidden">
+
+<aside class="w-64 bg-white shadow-lg flex flex-col p-4 space-y-6">
+<a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition duration-200">
+ <span class="text-2xl">🐾</span>
+ <h1 class="text-xl font-bold text-blue-600">Paws & Homes</h1>
+</a>
+<nav class="flex flex-col gap-2 text-gray-700">
+ <button class="nav-btn active-nav text-left px-3 py-2 rounded hover:bg-blue-100" data-target="posts">
+ <i data-lucide="paw-print" class="inline mr-2 w-5 h-5"></i> Adoption Posts
+ </button>
+ <button class="nav-btn text-left px-3 py-2 rounded hover:bg-blue-100" data-target="docs">
+ <i data-lucide="file-text" class="inline mr-2 w-5 h-5"></i> Documents
+ </button>
+ <button class="nav-btn text-left px-3 py-2 rounded hover:bg-blue-100" data-target="adopted">
+ <i data-lucide="heart" class="inline mr-2 w-5 h-5"></i> Adopted Pets
+ </button>
+ <button class="nav-btn text-left px-3 py-2 rounded hover:bg-blue-100" data-target="profile">
+ <i data-lucide="user" class="inline mr-2 w-5 h-5"></i> Profile
+ </button>
+</nav>
+<button id="logout-btn" class="mt-auto bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Logout</button>
+</aside>
+
+<main class="flex-1 p-8 overflow-y-auto relative">
+
+<section id="posts" class="fade-in">
+ <div class="flex items-center justify-between mb-4">
+ <h2 class="text-2xl font-semibold text-blue-600 flex items-center gap-2">
+  <i data-lucide="paw-print"></i> Adoption Posts
+ </h2>
+ <button id="add-post-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg btn flex items-center gap-2">
+  <i data-lucide="plus-circle"></i> Post for Adoption
+ </button>
+ </div>
+ <div id="pet-posts" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+ <p id="no-pets-msg" class="text-gray-500 mt-4 text-center p-8 border-2 border-dashed rounded-lg">No posts yet. Click Post for Adoption to help a pet find a home! 🏡</p>
+</section>
+
+<section id="docs" class="hidden fade-in">
+ <div class="flex items-center justify-between mb-4">
+ <h2 class="text-2xl font-semibold text-blue-600 flex items-center gap-2">
+  <i data-lucide="file-text"></i> **Important Documents**
+ </h2>
+ <button id="add-doc-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg btn flex items-center gap-2">
+  <i data-lucide="plus-circle"></i> Upload Document
+ </button>
+ </div>
+ <div id="doc-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+ <p id="no-docs-msg" class="text-gray-500 mt-4 text-center p-8 border-2 border-dashed rounded-lg">No documents yet. Click Upload Document to add important files.</p>
+</section>
+
+
+<section id="adopted" class="hidden fade-in">
+ <h2 class="text-2xl font-semibold text-blue-600 mb-4 flex items-center gap-2">
+ <i data-lucide="heart"></i> Happily Adopted Pets
+ </h2>
+ <div id="adopted-pets" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+ <p class="text-gray-500 mt-4 col-span-full text-center p-8 border-2 border-dashed rounded-lg">No pets marked as adopted yet. Keep up the good work! 🌟</p>
+ </div>
+</section>
+
+<section id="profile" class="hidden fade-in">
+ <h2 class="text-2xl font-semibold text-blue-600 mb-4 flex items-center gap-2">
+ <i data-lucide="user"></i> User Profile & Settings
+ </h2>
+ <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col gap-6 max-w-xl">
+ <p class="text-sm text-gray-500 border-l-4 border-blue-500 pl-3 bg-blue-50 p-2 rounded">
+  *Data is typically fetched from your secure database. Edits will update your account details.
+ </p>
+ <form id="profile-form" class="flex flex-col gap-4">
+  <div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+  <input type="text" id="profile-name" placeholder="Name" class="p-3 border rounded-lg w-full focus:ring-blue-500 focus:border-blue-500" value="Manish" required />
+  </div>
+  <div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+  <input type="email" id="profile-email" placeholder="Email" class="p-3 border rounded-lg w-full focus:ring-blue-500 focus:border-blue-500" value="Manish@gmail.com" required />
+  </div>
+  <div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+  <input type="tel" id="profile-mobile" placeholder="Mobile" class="p-3 border rounded-lg w-full focus:ring-blue-500 focus:border-blue-500" value="+91 8317574483" />
+  </div>
+  <div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">Location / City</label>
+  <input type="text" id="profile-location" placeholder="City, State/Province" class="p-3 border rounded-lg w-full focus:ring-blue-500 focus:border-blue-500" value="Tirupathi,Ap" />
+  </div>
+  <button type="submit" class="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold mt-2">Save Changes</button>
+ </form>
+ </div>
+</section>
+
+
+<div id="post-modal" class="hidden fixed inset-0 modal-bg flex justify-center items-center z-50">
+ <div class="modal bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg">
+ <h3 class="text-xl font-semibold mb-4 text-blue-600 flex items-center gap-2">
+  <i data-lucide="plus-circle" class="w-6 h-6"></i> New Pet Adoption Post
+ </h3>
+ <form id="pet-post-form" class="flex flex-col gap-4">
+    <select name="species" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+      <option value="">Select Species</option>
+      <option value="Dog">Dog</option>
+      <option value="Cat">Cat</option>
+      <option value="Rabbit">Rabbit</option>
+      <option value="Other">Other</option>
+    </select>
+  <input type="text" name="name" placeholder="Pet's Name (e.g., Buddy)" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+  <div class="grid grid-cols-2 gap-3">
+  <input type="text" name="age_str" placeholder="Age (e.g., 2 years)" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+  <select name="gender" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+   <option value="">Select Gender</option>
+   <option value="Male">Male ♂️</option>
+   <option value="Female">Female ♀️</option>
+  </select>
+  </div>
+    <select name="size" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+      <option value="">Select Size</option>
+      <option value="Small">Small</option>
+      <option value="Medium">Medium</option>
+      <option value="Large">Large</option>
+    </select>
+  <input type="text" name="breed" placeholder="Breed (e.g., Golden Retriever Mix)" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+  <textarea name="description" placeholder="A little bit about the pet, its temperament, and its needs..." rows="3" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required></textarea>
+  <div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">Upload Pet Photo</label>
+  <input type="file" name="img" accept="image/*" class="p-3 border rounded-lg w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+  </div>
+  <div class="flex justify-end gap-3 mt-3">
+  <button type="button" id="close-post-modal" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium">Cancel</button>
+  <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Submit Post</button>
+  </div>
+ </form>
+ </div>
+</div>
+
+<div id="doc-modal" class="hidden fixed inset-0 modal-bg flex justify-center items-center z-50">
+ <div class="modal bg-white rounded-xl shadow-2xl p-6 w-full max-w-md">
+ <h3 class="text-xl font-semibold mb-4 text-blue-600 flex items-center gap-2">
+  <i data-lucide="file-plus" class="w-6 h-6"></i> Upload New Document
+ </h3>
+ <form id="doc-upload-form" class="flex flex-col gap-3">
+  <input type="text" name="title" placeholder="Document Title (e.g., Annual Budget Report)" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+  <input type="text" name="motive" placeholder="Brief Description/Motive (e.g., Transparency Report 2024)" class="p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+  
+  <div>
+   <label class="block text-sm font-medium text-gray-700 mb-1">Document File (.pdf, .doc, .jpg)</label>
+   <input type="file" name="doc" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="p-3 border rounded-lg w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+  </div>
+  
+  <div>
+   <label class="block text-sm font-medium text-gray-700 mb-1"for="image">Cover Image (e.g., .jpg, .png)</label>
+   <input type="file" name="image" accept="image/*" class="p-3 border rounded-lg w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+  </div>
+  
+  <div class="flex justify-end gap-3 mt-3">
+  <button type="button" id="close-doc-modal" class="px-5 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 font-medium">Cancel</button>
+  <button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Upload Document</button>
+  </div>
+ </form>
+ </div>
+ </div>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+lucide.createIcons();
+
+// --- CONFIGURATION & LOCAL STORAGE SETUP ---
+
+// LocalStorage Keys
+const PET_POSTS_KEY = 'availablePets'; 
+const DOCS_KEY = 'userDocs';
+const ADOPTED_KEY = 'adoptedPets'; 
+const LOGGED_IN_USER_KEY = 'loggedInUser';
+
+// Utility to get/set data from localStorage
+const getStorage = (key, defaultValue = []) => JSON.parse(localStorage.getItem(key)) || defaultValue;
+const setStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+// Get current NGO email for filtering data (using a default placeholder)
+const currentUser = getStorage(LOGGED_IN_USER_KEY, {email: 'ngo@example.com'});
+const currentUserEmail = currentUser.email || 'ngo@example.com'; 
+
+// --- MODAL AND NAVIGATION SETUP ---
+const navBtns = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('main section');
+navBtns.forEach(btn=>{
+ btn.addEventListener('click',()=>{
+ navBtns.forEach(b=>b.classList.remove('active-nav'));
+ btn.classList.add('active-nav');
+ const target=btn.getAttribute('data-target');
+ sections.forEach(sec=>{
+  sec.classList.add('hidden');
+  if(sec.id===target){
+  sec.classList.remove('hidden');
+  sec.classList.add('fade-in');
+  }
+ });
+ // Refresh content when navigating
+ if(target === 'posts') renderAllPets();
+ if(target === 'docs') renderAllDocs();
+ if(target === 'adopted') renderAdoptedPets();
+ });
+});
+
+const postModal=document.getElementById('post-modal'),
+  addPostBtn=document.getElementById('add-post-btn'),
+  closePostBtn=document.getElementById('close-post-modal'),
+  docModal=document.getElementById('doc-modal'),
+  addDocBtn=document.getElementById('add-doc-btn'),
+  closeDocBtn=document.getElementById('close-doc-modal');
+
+addPostBtn.onclick=()=>postModal.classList.remove('hidden');
+closePostBtn.onclick=()=>postModal.classList.add('hidden');
+addDocBtn.onclick=()=>docModal.classList.remove('hidden');
+closeDocBtn.onclick=()=>docModal.classList.add('hidden');
+
+// Logout button handler
+document.getElementById('logout-btn').addEventListener('click', () => {
+ localStorage.removeItem(LOGGED_IN_USER_KEY);
+ window.location.href = 'login.html'; // Redirect to login page
+});
+
+
+// ---------------------------------
+// 🐶 PET POST CREATION & RENDERING (Logic kept intact)
+// ---------------------------------
+const petContainer=document.getElementById('pet-posts');
+const noPetsMsg=document.getElementById('no-pets-msg');
+const petPostForm = document.getElementById('pet-post-form');
+
+function renderAllPets() {
+ // Filter posts by the current NGO's email
+ const allPetPosts = getStorage(PET_POSTS_KEY);
+ const currentPetPosts = allPetPosts.filter(p => p.postedBy === currentUserEmail);
+
+ petContainer.innerHTML = '';
+ currentPetPosts.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+ 
+ if (currentPetPosts.length) {
+ currentPetPosts.forEach(p => renderPet(p));
+ noPetsMsg.style.display = 'none';
+ } else {
+ noPetsMsg.style.display = 'block';
+ }
+}
+
+function renderPet(p){
+ const div=document.createElement('div');
+ let statusColor;
+ if (p.status === 'Adoption Pending') {
+ statusColor = 'bg-yellow-500';
+ } else if (p.status === 'Adopted') {
+ statusColor = 'bg-red-500';
+ } else {
+ statusColor = 'bg-green-500';
+ }
+ 
+ div.className='bg-white rounded-xl shadow-lg p-3 flex gap-4 fade-in relative transform hover:scale-[1.02] transition duration-300';
+ 
+ const img_url = p.img || 'https://picsum.photos/100/100?random=' + p.id;
+
+ div.innerHTML=`
+ <div class="relative w-24 h-24 flex-shrink-0">
+  <img src="${img_url}" class="w-full h-full object-cover rounded-lg" alt="${p.name}">
+  <div class="absolute top-0 left-0 text-white text-xs font-semibold px-2 py-0.5 rounded-br-lg ${statusColor}">${p.status.split(' ')[0]}</div>
+ </div>
+ <div class="flex flex-col flex-grow gap-1">
+  <h3 class="font-bold text-blue-700 text-lg">${p.name} <span class="text-sm text-gray-500 font-medium">(${p.species})</span></h3>
+  <p class="text-gray-600 text-xs line-clamp-2">${p.breed} | Age: ${p.age}</p>
+    
+    <div class="flex items-center gap-2 mt-auto">
+      <label for="status-${p.id}" class="text-xs font-medium text-gray-700">Status:</label>
+      <select onchange="updatePetStatus(${p.id}, this.value)" id="status-${p.id}" class="p-1 border rounded-lg text-xs bg-gray-50 flex-grow">
+        <option value="Available" ${p.status === 'Available' ? 'selected' : ''}>Available</option>
+        <option value="Adoption Pending" ${p.status === 'Adoption Pending' ? 'selected' : ''}>Pending</option>
+        <option value="Adopted" ${p.status === 'Adopted' ? 'selected' : ''}>Adopted</option>
+      </select>
+      <button onclick="deletePet(${p.id})" class="text-gray-400 hover:text-red-600 btn p-1 rounded-full ml-2">
+     <i data-lucide="trash-2" class="w-4 h-4"></i>
+    </button>
+    </div>
+ </div>
+ `;
+ petContainer.prepend(div);
+ lucide.createIcons();
+}
+
+// Pet Post Form Submission and Status Update Functions (unchanged for brevity)
+
+petPostForm.addEventListener('submit', async (e) => {
+e.preventDefault();
+let currentPetPosts = getStorage(PET_POSTS_KEY);
+const formData = new FormData(petPostForm);
+const file = formData.get('img');
+let img_url = '';
+if (file && file instanceof File) {
+ img_url = await new Promise((resolve) => {
+ const reader = new FileReader();
+ reader.onload = () => resolve(reader.result);
+ reader.readAsDataURL(file);
+ });
+}
+const newPet = {
+ id: Date.now(), species: formData.get('species'), size: formData.get('size'), name: formData.get('name'),
+ age: formData.get('age_str'), gender: formData.get('gender'), breed: formData.get('breed'),
+ desc: formData.get('description'), img: img_url, created_at: new Date().toISOString(),
+ status: 'Available', postedBy: currentUserEmail,
+};
+if (!newPet.name || !newPet.species || !newPet.desc || !newPet.img) {
+  alert('Please fill all required fields, including uploading a photo.');
+  return;
+}
+currentPetPosts.push(newPet);
+setStorage(PET_POSTS_KEY, currentPetPosts);
+alert(`Pet post for ${newPet.name} created successfully!`);
+petPostForm.reset();
+postModal.classList.add('hidden');
+renderAllPets();
+});
+
+window.updatePetStatus = (id, newStatus) => {
+ let currentPetPosts = getStorage(PET_POSTS_KEY);
+ let adoptedPets = getStorage(ADOPTED_KEY);
+ const petIndex = currentPetPosts.findIndex(p => p.id === id);
+ const pet = currentPetPosts[petIndex];
+ if (petIndex > -1) {
+ pet.status = newStatus;
+ if (newStatus === 'Adopted') {
+  currentPetPosts.splice(petIndex, 1);
+  adoptedPets.push({...pet, adoptedAt: new Date().toISOString(), user: 'N/A (Dashboard Manual)'});
+  setStorage(ADOPTED_KEY, adoptedPets);
+  alert(`${pet.name} successfully marked as Adopted and moved!`);
+ } else {
+  currentPetPosts[petIndex] = pet;
+  alert(`Status for ${pet.name} updated to ${newStatus}.`);
+ }
+ setStorage(PET_POSTS_KEY, currentPetPosts); 
+ renderAllPets(); 
+ }
+}
+
+window.deletePet = (id) => {
+ if(confirm('Are you sure you want to delete this pet adoption post?')){
+  let currentPetPosts = getStorage(PET_POSTS_KEY);
+  const index = currentPetPosts.findIndex(p => p.id === id);
+  if (index > -1) {
+   currentPetPosts.splice(index, 1);
+   setStorage(PET_POSTS_KEY, currentPetPosts);
+   alert('Pet post deleted successfully.');
+   renderAllPets();
+  }
+ }
+}
+
+// ---------------------------------
+// 🐶 ADOPTED PETS RENDERING (Logic kept intact)
+// ---------------------------------
+function renderAdoptedPets() {
+  const adoptedPetsContainer = document.getElementById('adopted-pets');
+  const adoptedPets = getStorage(ADOPTED_KEY).filter(p => p.postedBy === currentUserEmail);
+  adoptedPetsContainer.innerHTML = '';
+
+  if (adoptedPets.length > 0) {
+    adoptedPetsContainer.innerHTML = adoptedPets.map(p => `
+      <div class="bg-green-50 rounded-xl shadow-lg p-4 flex gap-4 items-center">
+        <img src="${p.img || 'https://via.placeholder.com/60'}" class="w-16 h-16 object-cover rounded-full border-2 border-green-400" alt="${p.name}" />
+        <div>
+          <h4 class="font-bold text-green-800">${p.name}</h4>
+          <div class="text-sm text-gray-600">${p.species} (${p.breed})</div>
+          <div class="text-xs text-green-600 mt-1">Adopted by: ${p.user || 'N/A'}</div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    adoptedPetsContainer.innerHTML = `
+      <p class="text-gray-500 mt-4 col-span-full text-center p-8 border-2 border-dashed rounded-lg">No pets marked as adopted yet. Keep up the good work! 🌟</p>
+    `;
+  }
+}
+
+
+// ---------------------------------
+// 📑 DOCUMENTS RENDERING (UPDATED TO INCLUDE NGO EMAIL FILTERING)
+// ---------------------------------
+const docContainer=document.getElementById('doc-list');
+const noDocsMsg=document.getElementById('no-docs-msg');
+const docUploadForm = document.getElementById('doc-upload-form');
+
+ // Initialize dummy data with the current user's email for filtering consistency
+ let docsInitial = getStorage(DOCS_KEY, [
+   { id: 1, title: 'Annual Vet Checkup', motive: 'Required forms', doc_url: '#', created_at: '2025-09-01T10:00:00Z', ngoEmail: currentUserEmail },
+   { id: 2, title: 'Spay/Neuter Certificate', motive: 'Mandatory documentation', doc_url: '#', created_at: '2025-08-15T10:00:00Z', ngoEmail: currentUserEmail }
+ ]);
+ setStorage(DOCS_KEY, docsInitial);
+
+function renderAllDocs() {
+ docContainer.innerHTML = '';
+ 
+ // Filter documents by the current NGO's email
+ const currentDocs = getStorage(DOCS_KEY).filter(d => d.ngoEmail === currentUserEmail);
+ currentDocs.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+ if (currentDocs.length) {
+ currentDocs.forEach(d => renderDoc(d));
+ noDocsMsg.style.display = 'none';
+ } else {
+ noDocsMsg.style.display = 'block';
+ }
+}
+
+function renderDoc(d){
+ // Apply the clean card philosophy (similar to Pet Posts)
+ const div=document.createElement('div');
+ div.className='bg-white rounded-xl shadow-lg p-5 flex flex-col fade-in transform hover:scale-[1.02] transition duration-300';
+ 
+ // Determine if the file is an image (for preview) or a general document
+ const isImage = d.doc_url && (d.doc_url.startsWith('data:image') || d.doc_url.match(/\.(jpeg|jpg|png)$/i));
+ 
+ div.innerHTML=`
+  ${isImage ? `<img src="${d.doc_url}" class="w-full h-32 object-cover rounded-lg mb-3 border border-gray-100" alt="${d.title} preview">` : 
+   `<div class="bg-blue-50 text-blue-600 p-4 rounded-lg mb-3 flex items-center justify-center h-32">
+     <i data-lucide="file-text" class="w-12 h-12"></i>
+   </div>`
+  }
+ <h3 class="font-bold text-blue-700 text-lg mb-1 line-clamp-1">${d.title}</h3>
+ ${d.motive?`<p class="text-gray-600 text-sm mb-2 line-clamp-2">${d.motive}</p>`:''}
+ <span class="text-xs text-gray-400 mt-auto pt-3 border-t">Uploaded: ${new Date(d.created_at).toLocaleDateString()}</span>
+ <div class="flex gap-3 mt-3 items-center">
+  <button class="flex-grow px-3 py-1 bg-blue-600 text-white rounded-lg btn text-sm font-semibold">
+  Download <i data-lucide="download" class="inline w-4 h-4 ml-1"></i>
+  </button>
+  <button class="px-3 py-1 bg-red-600 text-white rounded-lg btn" onclick="deleteDoc(${d.id})"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+ </div>
+ `;
+ docContainer.prepend(div);
+ lucide.createIcons();
+}
+
+ // Handle Document Upload
+ docUploadForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(docUploadForm);
+  const file = formData.get('doc');
+  let doc_url = '#';
+
+  // Convert file to Base64 URL for local storage persistence (if file exists)
+  if (file && file instanceof File) {
+    doc_url = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
+  
+  const newDoc = {
+    id: Date.now(),
+    title: formData.get('title'),
+    motive: formData.get('motive'),
+    doc_url: doc_url, // Base64 URL or placeholder '#'
+    created_at: new Date().toISOString(),
+    ngoEmail: currentUserEmail, // Filter by current NGO
+  };
+
+  let currentDocs = getStorage(DOCS_KEY);
+  currentDocs.push(newDoc);
+  setStorage(DOCS_KEY, currentDocs);
+
+  alert(`Document '${newDoc.title}' uploaded successfully.`);
+  docUploadForm.reset();
+  docModal.classList.add('hidden');
+  renderAllDocs();
+ });
+ 
+ window.deleteDoc = (id) => {
+  if(confirm('Are you sure you want to delete this document?')){
+    let currentDocs = getStorage(DOCS_KEY);
+    const index = currentDocs.findIndex(d => d.id === id);
+    if (index > -1) {
+      currentDocs.splice(index, 1);
+      setStorage(DOCS_KEY, currentDocs);
+      alert('Document deleted.');
+      renderAllDocs();
+    }
+  }
+ }
+
+// Initial rendering
+renderAllPets();
+renderAllDocs();
+renderAdoptedPets();
+});
+</script>
+</body>
+</html>
