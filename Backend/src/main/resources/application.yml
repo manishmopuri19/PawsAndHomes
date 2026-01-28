@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: PawsAndHomes
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/paws_and_homes
+    username: root
+    password: your_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+
+jwt:
+  secret: Y7v9B8qF2kL4sH3dN6mR0xW1pT5cZ8vQ
+  expiration: 86400000
+
+aws:
+  region: ap-south-1
+  s3:
+    bucket-name: paws-and-homes-bucket
+  credentials:
+    access-key: YOUR_ACCESS_KEY
+    secret-key: YOUR_SECRET_KEY
